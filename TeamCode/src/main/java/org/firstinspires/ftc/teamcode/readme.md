@@ -1,6 +1,9 @@
 # Team FTC Git Workflow Guide
+    
+Hello!
 
-This document explains how to set up the FTC project on your computer and the rules for working with branches.
+This document explains how to use this repo as a 23344 team member
+
 
 ---
 
