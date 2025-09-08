@@ -3,6 +3,7 @@ repositories {
     google() // Needed for androidx
     maven { url = 'https://maven.pedropathing.com' } //Pedro
     maven { url = "https://mymaven.bylazar.com/releases" } //Panels
+    maven { url = 'https://maven.brott.dev/' } //RR
 }
 
 dependencies {
@@ -20,6 +21,11 @@ dependencies {
     implementation 'com.pedropathing:telemetry:0.0.6' //PedroTele
 
     implementation 'com.bylazar:fullpanels:1.0.2' //Panels
+
+    implementation "com.acmerobotics.roadrunner:ftc:0.1.25" //RR
+    implementation "com.acmerobotics.roadrunner:core:1.0.1" //RR
+    implementation "com.acmerobotics.roadrunner:actions:1.0.1" //RR
+    implementation "com.acmerobotics.dashboard:dashboard:0.4.17" //FTC Dash
 
 
 
