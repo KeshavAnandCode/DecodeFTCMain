@@ -1,8 +1,5 @@
 # Team FTC Git Workflow Guide
 
-This document explains how to set up the FTC project on your computer and the rules for working with branches.
-
----
 
 ## 1. Cloning the Repository
 
