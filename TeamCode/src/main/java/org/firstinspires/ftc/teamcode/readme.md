@@ -1,11 +1,5 @@
 # Team FTC Git Workflow Guide
-    
-Hello!
 
-This document explains how to use this repo as a 23344 team member
-
-
----
 
 ## 1. Cloning the Repository
 
