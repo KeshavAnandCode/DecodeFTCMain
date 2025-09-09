@@ -5,6 +5,7 @@ repositories {
     maven { url = "https://mymaven.bylazar.com/releases" } //Panels
     maven { url = 'https://maven.brott.dev/' } //RR
     maven { url = "https://maven.rowanmcalpin.com/" } //Next FTC
+    maven { url = "https://repo.dairy.foundation/releases" } //AS
 }
 
 dependencies {
@@ -35,6 +36,9 @@ dependencies {
     implementation 'com.rowanmcalpin.nextftc:core:0.6.2' //NEXT FTC
     implementation 'com.rowanmcalpin.nextftc:ftc:0.6.2'//NEXT FTC
     implementation 'com.rowanmcalpin.nextftc:pedro:0.6.2'//NEXT FTC
+
+    implementation("page.j5155.AdvantageScope:lite:v26.0.0") //AS
+
 
 
 
