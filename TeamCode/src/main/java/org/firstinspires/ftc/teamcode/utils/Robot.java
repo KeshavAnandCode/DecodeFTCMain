@@ -18,6 +18,8 @@ public class Robot {
         flywheel1 = hardwareMap.get(DcMotorEx.class, "fly1"); //Port 0
         flywheel2 = hardwareMap.get(DcMotorEx.class, "fly2"); //Port 0
 
+        //Motor Direction
+
         flywheel1.setDirection(DcMotorSimple.Direction.REVERSE);
         flywheel2.setDirection(DcMotorSimple.Direction.FORWARD);
 
