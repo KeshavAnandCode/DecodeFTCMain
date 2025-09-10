@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.utils.Robot;
 import org.firstinspires.ftc.teamcode.utils.Subsystem;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -18,7 +19,7 @@ public class Shooter implements Subsystem {
 
     // PID controllers
     private final PIDController positionPID;
-    private final PIDController velocityPID;
+    private final PIDFController velocityPIDF;
 
     // targets
     private double targetPosition = 0;
@@ -35,7 +36,7 @@ public class Shooter implements Subsystem {
         this.fly1 = robot.flywheel1;
         this.fly2 = robot.flywheel2;
 
-        // ✅ Combine Driver Station telemetry and FTC Dashboard telemetry
+        // Combine Driver Station telemetry and FTC Dashboard telemetry
         this.telemetry = new MultipleTelemetry(
                 opModeTelemetry,
                 FtcDashboard.getInstance().getTelemetry()
@@ -45,12 +46,18 @@ public class Shooter implements Subsystem {
         fly1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fly2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        fly1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        fly2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // Use RUN_USING_ENCODER for velocity control
+        fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Initialize PID controllers (tune these!)
+        // Initialize PID controllers
         positionPID = new PIDController(0.005, 0.0, 0.0001);
-        velocityPID = new PIDController(0.002, 0.0, 0.0);
+        positionPID.setTolerance(10);
+
+        // PIDFController for velocity control: P, I, D, F (feedforward)
+        double F = 1.0; // feedforward term; adjust according to motor max velocity
+        velocityPIDF = new PIDFController(0.002, 0.0, 0.0, F);
+        velocityPIDF.setTolerance(40);
     }
 
     /* ---------------- PUBLIC API ---------------- */
@@ -71,6 +78,7 @@ public class Shooter implements Subsystem {
         targetVelocity = ticksPerSec;
         velocityMode = true;
         positionMode = false;
+        velocityPIDF.reset(); // reset integral for new target
     }
 
     public void stop() {
@@ -86,45 +94,50 @@ public class Shooter implements Subsystem {
         positionPID.setPID(kP, kI, kD);
     }
 
-    public void setVelocityPID(double kP, double kI, double kD) {
-        velocityPID.setPID(kP, kI, kD);
+    public void setVelocityPID(double kP, double kI, double kD, double kF) {
+        velocityPIDF.setPIDF(kP, kI, kD, kF);
     }
 
+    public void setPositionPIDTolerance(double tol) { positionPID.setTolerance(tol); }
+
+    public void setVelocityPIDTolerance(double tol) { velocityPIDF.setTolerance(tol); }
+
     public int getPosition() {
-        return fly1.getCurrentPosition();
+        return (fly1.getCurrentPosition() + fly2.getCurrentPosition()) / -2;
     }
 
     public double getVelocity() {
-        return fly1.getVelocity();
+        return (fly1.getVelocity() + fly2.getVelocity()) / -2;
     }
 
     /* ---------------- UPDATE LOOP ---------------- */
 
     @Override
     public void update() {
-        double output;
-
         if (positionMode) {
-            output = positionPID.calculate(getPosition(), targetPosition);
+            double output = positionPID.calculate(getPosition(), targetPosition);
+            output = clamp(output, -1, 1);
+            fly1.setPower(output);
+            fly2.setPower(output);
         } else if (velocityMode) {
-            output = velocityPID.calculate(getVelocity(), targetVelocity);
+            // Calculate PIDF velocity correction
+            double correctedVelocity = velocityPIDF.calculate(getVelocity(), targetVelocity);
+            fly1.setVelocity(correctedVelocity);
+            fly2.setVelocity(correctedVelocity);
         } else {
-            output = manualPower;
+            fly1.setPower(manualPower);
+            fly2.setPower(manualPower);
         }
 
-        output = clamp(output, -1, 1);
-        fly1.setPower(output);
-        fly2.setPower(output);
-
-        // Telemetry goes to BOTH DS and Dashboard
+        // Telemetry
         telemetry.addLine("Shooter:");
-        telemetry.addData(" Mode", positionMode ? "POSITION" : velocityMode ? "VELOCITY" : "MANUAL");
-        telemetry.addData(" Output", "%.3f", output);
-        telemetry.addData(" Position", getPosition());
-        telemetry.addData(" TargetPos", targetPosition);
-        telemetry.addData(" Velocity", "%.1f", getVelocity());
-        telemetry.addData(" TargetVel", targetVelocity);
-        telemetry.update(); // ✅ push telemetry each loop
+        telemetry.addData("Mode", positionMode ? "POSITION" : velocityMode ? "VELOCITY" : "MANUAL");
+        telemetry.addData("Position", getPosition());
+        telemetry.addData("TargetPos", targetPosition);
+        telemetry.addData("Velocity", "%.1f", getVelocity());
+        telemetry.addData("TargetVel", targetVelocity);
+        telemetry.addData("ManualPower", manualPower);
+        telemetry.update();
     }
 
     private double clamp(double val, double min, double max) {
