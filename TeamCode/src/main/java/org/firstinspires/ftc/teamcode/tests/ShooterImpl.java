@@ -23,6 +23,8 @@ public class ShooterImpl extends LinearOpMode {
     public static int pos = 0;
     public static double posPower = 0.0;
 
+    public static double p = 0.000003, i = 0, d = 0.000001;
+
 
     public static String mode = "MANUAL";
 
@@ -40,9 +42,17 @@ public class ShooterImpl extends LinearOpMode {
 
         shooter.setTelemetryOn(true);
 
+        shooter.setMode(mode);
+
+
+        shooter.setControllerCoefficients(p, i, d);
+
+
         waitForStart();
 
         while(opModeIsActive()){
+
+            shooter.setControllerCoefficients(p, i, d);
 
             shooter.setMode(mode);
 

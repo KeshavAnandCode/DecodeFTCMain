@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.utils.subsystems;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -26,6 +28,11 @@ public class Shooter implements Subsystem {
 
     private int targetPosition = 0;
 
+    private double p = 0.0003, i = 0, d = 0.00001;
+
+    private PIDController controller;
+
+
 
 
 
@@ -43,6 +50,11 @@ public class Shooter implements Subsystem {
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        controller = new PIDController(p, i, d);
+
+
+        controller.setPID(p, i, d);
+
 
 
 
@@ -59,6 +71,7 @@ public class Shooter implements Subsystem {
         telemetry.addData("TargetPosition", targetPosition);
         telemetry.addData("Velocity", getVelocity());
         telemetry.addData("TargetVelocity", velocity);
+        telemetry.addData("PID Coefficients", "P: %.6f, I: %.6f, D: %.6f", p, i, d);
         telemetry.addData("Current Fly 1", fly1.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Current Fly 2", fly2.getCurrent(CurrentUnit.AMPS));
 
@@ -80,10 +93,24 @@ public class Shooter implements Subsystem {
     }
 
     public void setTolerance(int tolerance){
-        fly1.setTargetPositionTolerance(tolerance);
-        fly2.setTargetPositionTolerance(tolerance);
+        controller.setTolerance(tolerance);
+    }
+
+    public void setControllerCoefficients(double kp, double ki, double kd){
+        p = kp;
+        i = ki;
+        d = kd;
+        controller.setPID(p, i, d);
 
     }
+
+    public PIDCoefficients  getControllerCoefficients(){
+
+        return new PIDCoefficients(p, i, d);
+
+    }
+
+
 
 
 
@@ -125,15 +152,13 @@ public class Shooter implements Subsystem {
 
         else if (Objects.equals(Mode, "POS")){
 
-            fly1.setTargetPosition(targetPosition);
-            fly2.setTargetPosition(targetPosition);
+
+            double powPID = controller.calculate(getPosition(), targetPosition);
 
 
-            fly1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            fly2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            fly1.setPower(posPower);
-            fly2.setPower(posPower);
+            fly1.setPower(powPID);
+            fly2.setPower(powPID);
         }
 
         if (telemetryOn) {telemetryUpdate();}
