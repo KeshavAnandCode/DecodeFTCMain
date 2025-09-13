@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.utils;
 
+import static org.firstinspires.ftc.teamcode.constants.HardwareConfig.*;
+
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,6 +13,7 @@ public class Robot {
 
     public DcMotorEx flywheel1;
     public DcMotorEx flywheel2;
+    public Limelight3A limelight;
 
     public Robot (HardwareMap hardwareMap) {
 
@@ -20,6 +24,12 @@ public class Robot {
 
         flywheel1.setDirection(DcMotorSimple.Direction.FORWARD);
         flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        if (USING_LL) {
+            limelight = hardwareMap.get(Limelight3A.class, "limelight");
+            limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
+            limelight.start(); // This tells Limelight to start looking!
+        }
 
 
     }
