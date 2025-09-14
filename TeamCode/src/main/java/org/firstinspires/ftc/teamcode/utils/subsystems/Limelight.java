@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.utils.subsystems;
 
+
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -55,6 +56,8 @@ public class Limelight implements Subsystem {
         this.telemetry = tele;
         limelight.pipelineSwitch(1);
     }
+
+    public void setPipeline(int pipeline) {limelight.pipelineSwitch(pipeline);}
 
     public void setTelemetryOn(boolean state) { telemetryOn = state; }
 

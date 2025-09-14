@@ -50,6 +50,9 @@ public class ShooterImpl extends LinearOpMode {
 
         waitForStart();
 
+        if(isStopRequested()) return;
+
+
         while(opModeIsActive()){
 
             shooter.setControllerCoefficients(p, i, d);
