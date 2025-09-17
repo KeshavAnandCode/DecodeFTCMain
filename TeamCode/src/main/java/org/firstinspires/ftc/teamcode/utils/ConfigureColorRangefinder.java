@@ -1,18 +1,20 @@
 package org.firstinspires.ftc.teamcode.utils;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 
-
-@TeleOp
+@Config
+@Configurable
+@Autonomous
 public class ConfigureColorRangefinder extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        ColorRangefinder crf =
-                new ColorRangefinder(hardwareMap.get(RevColorSensorV3.class, "Color"));
-
+        ColorRangefinder crf = new ColorRangefinder(hardwareMap.get(RevColorSensorV3.class, "Color"));
         /*
         Using this example configuration, you can detect all three sample colors based on which pin is reading true:
         both      --> yellow
@@ -20,12 +22,10 @@ public class ConfigureColorRangefinder extends LinearOpMode {
         only pin1 --> red
         neither   --> no object
          */
-        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 180 / 360.0 * 255, 250 / 360.0 * 255); // blue
-        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 55 / 360.0 * 255, 90 / 360.0 * 255); // yellow
+        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 180 / 360.0 * 255, 250 / 360.0 * 255); // green
         crf.setPin0DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 20); // 20mm or closer requirement
 
-        crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 0 / 360.0 * 255, 50 / 360.0 * 255); // red
-        crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 55 / 360.0 * 255, 90 / 360.0 * 255); // yellow
+        crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 0 / 360.0 * 255, 50 / 360.0 * 255); // purple
         crf.setPin1DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 20); // 20mm or closer requirement
 
         waitForStart();
@@ -87,18 +87,13 @@ class ColorRangefinder {
      * This is useful if we want to threshold red; instead of having two thresholds we would invert
      * the color and look for blue.
      */
-    public void setPin0InvertHue() {
-        setPin0DigitalMaxDistance(DigitalMode.HSV, 200);
-    }
+
 
     /**
      * Invert the hue value before thresholding it, meaning that the colors become their opposite.
      * This is useful if we want to threshold red; instead of having two thresholds we would invert
      * the color and look for blue.
      */
-    public void setPin1InvertHue() {
-        setPin1DigitalMaxDistance(DigitalMode.HSV, 200);
-    }
 
     /**
      * The denominator is what the raw sensor readings will be divided by before being scaled to 12-bit analog.

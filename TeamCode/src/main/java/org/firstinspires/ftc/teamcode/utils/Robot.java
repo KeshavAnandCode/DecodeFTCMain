@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.constants.HardwareConfig.*;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Robot {
@@ -14,7 +15,7 @@ public class Robot {
     public DcMotorEx flywheel1;
     public DcMotorEx flywheel2;
     public Limelight3A limelight;
-
+    public DigitalChannel Pin0;
     public Robot (HardwareMap hardwareMap) {
 
         //Define components w/ hardware map
