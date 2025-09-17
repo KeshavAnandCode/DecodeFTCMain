@@ -27,7 +27,6 @@ public class Robot {
 
         if (USING_LL) {
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
-            limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
             limelight.start(); // This tells Limelight to start looking!
         }
 

@@ -55,6 +55,8 @@ public class Limelight implements Subsystem {
         this.limelight = robot.limelight;
         this.telemetry = tele;
         limelight.pipelineSwitch(1);
+
+
     }
 
     public void setPipeline(int pipeline) {limelight.pipelineSwitch(pipeline);}
@@ -69,7 +71,7 @@ public class Limelight implements Subsystem {
         result = limelight.getLatestResult();
         status = limelight.getStatus();
 
-        if (result != null && result.isValid()) {
+        if (result != null && (Objects.equals(status.getPipelineType(), "pipe_python") || result.isValid())){
             // Refresh all cached values
             botpose         = result.getBotpose();
             captureLatency  = result.getCaptureLatency();
@@ -101,6 +103,8 @@ public class Limelight implements Subsystem {
         telemetry.addData("Pipeline", "Index: %d, Type: %s",
                 getStatus().getPipelineIndex(),
                 getStatus().getPipelineType());
+        telemetry.addData("ResultNull", result == null);
+        telemetry.addData("ResultValid", result.isValid());
 
 
 
@@ -115,6 +119,7 @@ public class Limelight implements Subsystem {
             telemetry.addData("ty", getTy());
             telemetry.addData("tync", getTyNC());
             telemetry.addData("Botpose", getBotPose().toString());
+
 
             if (Objects.equals(mode, "BR"))
                 for (LLResultTypes.BarcodeResult br : getBarcodeResults())
