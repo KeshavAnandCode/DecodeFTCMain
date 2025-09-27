@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -17,12 +18,14 @@ import java.util.Objects;
 public class Shooter implements Subsystem {
     private final DcMotorEx fly1;
     private final DcMotorEx fly2;
+    private final Servo hoodServo;
 
     private final MultipleTelemetry telemetry;
 
     private boolean telemetryOn = false;
 
     private double manualPower = 0.0;
+    private double servoPos = 0.0;
     private double velocity = 0.0;
     private double posPower = 0.0;
 
@@ -42,6 +45,7 @@ public class Shooter implements Subsystem {
         this.fly1 = robot.flywheel1;
         this.fly2 = robot.flywheel2;
         this.telemetry = TELE;
+        this.hoodServo = robot.hood;
 
         // Reset encoders
         fly1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -49,6 +53,7 @@ public class Shooter implements Subsystem {
 
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         controller = new PIDController(p, i, d);
 
@@ -71,11 +76,18 @@ public class Shooter implements Subsystem {
         telemetry.addData("TargetPosition", targetPosition);
         telemetry.addData("Velocity", getVelocity());
         telemetry.addData("TargetVelocity", velocity);
+        telemetry.addData("ServoPos", getServoPosition());
         telemetry.addData("PID Coefficients", "P: %.6f, I: %.6f, D: %.6f", p, i, d);
         telemetry.addData("Current Fly 1", fly1.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("Current Fly 2", fly2.getCurrent(CurrentUnit.AMPS));
 
     }
+
+    public double getServoPosition() {
+        return (hoodServo.getPosition());
+    }
+
+    public void setServoPosition(double pos) {servoPos = pos;}
 
     public double getVelocity() {
         return ((double) ((fly1.getVelocity(AngleUnit.DEGREES) + fly2.getVelocity(AngleUnit.DEGREES)) /2));
@@ -160,6 +172,8 @@ public class Shooter implements Subsystem {
             fly1.setPower(powPID);
             fly2.setPower(powPID);
         }
+
+        hoodServo.setPosition(servoPos);
 
         if (telemetryOn) {telemetryUpdate();}
 

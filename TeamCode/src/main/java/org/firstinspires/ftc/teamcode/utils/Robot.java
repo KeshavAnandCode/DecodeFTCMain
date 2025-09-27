@@ -6,6 +6,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
 
@@ -14,6 +15,7 @@ public class Robot {
     public DcMotorEx flywheel1;
     public DcMotorEx flywheel2;
     public Limelight3A limelight;
+    public Servo hood;
 
     public Robot (HardwareMap hardwareMap) {
 
@@ -29,6 +31,8 @@ public class Robot {
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
             limelight.start(); // This tells Limelight to start looking!
         }
+
+        hood = hardwareMap.servo.get("hood");
 
 
     }

@@ -30,6 +30,8 @@ public class ShooterImpl extends LinearOpMode {
 
     public static int posTolerance = 40;
 
+    public static double servoPosition = 0.501;
+
     MultipleTelemetry TELE;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,6 +70,8 @@ public class ShooterImpl extends LinearOpMode {
             shooter.setTolerance(posTolerance);
 
             shooter.setPosPower(posPower);
+
+            if (servoPosition!=0.501) {shooter.setServoPosition(servoPosition);}
 
 
             shooter.update();
