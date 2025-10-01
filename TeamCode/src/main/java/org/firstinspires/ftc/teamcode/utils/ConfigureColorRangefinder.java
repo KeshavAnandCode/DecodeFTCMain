@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 @Config
 @Configurable
 @Autonomous
+
+
 public class ConfigureColorRangefinder extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -42,6 +44,7 @@ public class ConfigureColorRangefinder extends LinearOpMode {
  * Online documentation: <a href="https://docs.brushlandlabs.com">...</a>
  */
 class ColorRangefinder {
+    public static int LED_VALUE = 30;
     public final RevColorSensorV3 emulator;
     private final I2cDeviceSynchSimple i2c;
 
@@ -210,7 +213,6 @@ class ColorRangefinder {
     private static final byte PS_DISTANCE_0 = 0x42;
     private static final byte LED_BRIGHTNESS = 0x46;
     private static final byte I2C_ADDRESS_REG = 0x47;
-    public static int LED_VALUE = 20;
 
     public static int invertHue(int hue360) {
         return ((hue360 - 180) % 360);
