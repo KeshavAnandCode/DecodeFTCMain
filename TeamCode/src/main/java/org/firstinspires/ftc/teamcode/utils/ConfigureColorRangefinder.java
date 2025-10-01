@@ -22,11 +22,14 @@ public class ConfigureColorRangefinder extends LinearOpMode {
         only pin1 --> red
         neither   --> no object
          */
-        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 180 / 360.0 * 255, 250 / 360.0 * 255); // green
+        crf.setPin0Digital(ColorRangefinder.DigitalMode.HSV, 90 / 360.0 * 255, 180 / 360.0 * 255); // green
         crf.setPin0DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 20); // 20mm or closer requirement
 
-        crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 0 / 360.0 * 255, 50 / 360.0 * 255); // purple
+
+        crf.setPin1Digital(ColorRangefinder.DigitalMode.HSV, 270 / 360.0 * 255, 355 / 360.0 * 255); // purple
         crf.setPin1DigitalMaxDistance(ColorRangefinder.DigitalMode.HSV, 20); // 20mm or closer requirement
+
+        crf.setLedBrightness(ColorRangefinder.LED_VALUE);
 
         waitForStart();
 
@@ -207,6 +210,7 @@ class ColorRangefinder {
     private static final byte PS_DISTANCE_0 = 0x42;
     private static final byte LED_BRIGHTNESS = 0x46;
     private static final byte I2C_ADDRESS_REG = 0x47;
+    public static int LED_VALUE = 20;
 
     public static int invertHue(int hue360) {
         return ((hue360 - 180) % 360);
