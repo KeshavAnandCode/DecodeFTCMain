@@ -15,12 +15,12 @@ public class Robot {
     public DcMotorEx flywheel1;
     public DcMotorEx flywheel2;
     public Limelight3A limelight;
-    public DigitalChannel color1_0;
-    public DigitalChannel color1_1;
-    public DigitalChannel color2_0;
-    public DigitalChannel color2_1;
-    public DigitalChannel color3_0;
-    public DigitalChannel color3_1;
+    public DigitalChannel color1green;
+    public DigitalChannel color1purple;
+    public DigitalChannel color2green;
+    public DigitalChannel color2purple;
+    public DigitalChannel color3green;
+    public DigitalChannel color3purple;
     public Robot (HardwareMap hardwareMap) {
 
         //Define components w/ hardware map
@@ -31,12 +31,12 @@ public class Robot {
         flywheel1.setDirection(DcMotorSimple.Direction.FORWARD);
         flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        color1_0 = hardwareMap.get(DigitalChannel.class,"color10"); //Port0-1
-        color1_1 = hardwareMap.get(DigitalChannel.class,"color11"); //Port0-1
-        color2_0 = hardwareMap.get(DigitalChannel.class,"color20"); //Port2-3
-        color2_1 = hardwareMap.get(DigitalChannel.class,"color21"); //Port2-3
-        color3_0 = hardwareMap.get(DigitalChannel.class,"color30"); //Port4-5
-        color3_1 = hardwareMap.get(DigitalChannel.class,"color31"); //Port4-5
+        color1green = hardwareMap.get(DigitalChannel.class,"color1green"); //Port0-1
+        color1purple = hardwareMap.get(DigitalChannel.class,"color1purple"); //Port0-1
+        //color2green = hardwareMap.get(DigitalChannel.class,"color2green"); //Port2-3
+        //color2purple = hardwareMap.get(DigitalChannel.class,"color2purple"); //Port2-3
+        //color3green = hardwareMap.get(DigitalChannel.class,"color3green"); //Port4-5
+        //color3purple = hardwareMap.get(DigitalChannel.class,"color3purple"); //Port4-5
 
 
         if (USING_LL) {
