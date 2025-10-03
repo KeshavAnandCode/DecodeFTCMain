@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode.tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.utils.Robot;
 
-@Autonomous
-@Configurable
+@TeleOp
+@Config
 public class ColorSensorTest extends LinearOpMode{
     Robot robot;
     MultipleTelemetry TELE;
@@ -25,6 +26,7 @@ public class ColorSensorTest extends LinearOpMode{
         while (opModeIsActive()){
             TELE.addData("Green:", robot.color1green.getState());
             TELE.addData("Purple:", robot.color1purple.getState());
+            TELE.update();
         }
     }
 

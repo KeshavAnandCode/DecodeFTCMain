@@ -44,7 +44,7 @@ public class ConfigureColorRangefinder extends LinearOpMode {
  * Online documentation: <a href="https://docs.brushlandlabs.com">...</a>
  */
 class ColorRangefinder {
-    public static int LED_VALUE = 30;
+    public static int LED_VALUE = 0;
     public final RevColorSensorV3 emulator;
     private final I2cDeviceSynchSimple i2c;
 
