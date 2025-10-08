@@ -113,5 +113,9 @@ android {
 }
 
 repositories {
+    google()
+    mavenCentral()
+    jcenter() // Only if needed
+    maven { url 'https://maven.brott.dev/' } // FTC SDK-specific repo
 }
 
