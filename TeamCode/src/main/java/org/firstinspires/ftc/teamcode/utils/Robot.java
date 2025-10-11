@@ -16,6 +16,7 @@ public class Robot {
     public DcMotorEx flywheel2;
     public Limelight3A limelight;
     public Servo hood;
+    public Servo turret;
 
     public Robot (HardwareMap hardwareMap) {
 
@@ -33,6 +34,8 @@ public class Robot {
         }
 
         hood = hardwareMap.servo.get("hood");
+
+        turret = hardwareMap.servo.get("turret");
 
 
     }
