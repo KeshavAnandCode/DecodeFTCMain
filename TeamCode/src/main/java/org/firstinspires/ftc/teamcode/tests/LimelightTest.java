@@ -6,9 +6,9 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.variables.HardwareConfig;
 import org.firstinspires.ftc.teamcode.utils.Robot;
 import org.firstinspires.ftc.teamcode.utils.subsystems.Limelight;
-
 
 @Autonomous
 @Config
@@ -21,10 +21,19 @@ public class LimelightTest extends LinearOpMode {
 
     MultipleTelemetry TELE;
 
+
+
+
+
+
     Robot robot;
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+
+
+        HardwareConfig.USING_LL= true;
 
 
         robot = new Robot(hardwareMap);
@@ -50,6 +59,7 @@ public class LimelightTest extends LinearOpMode {
             limelight.update();
 
             TELE.update();
+
 
         }
 

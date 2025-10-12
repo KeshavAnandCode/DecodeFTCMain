@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.variables.HardwareConfig;
 import org.firstinspires.ftc.teamcode.utils.Robot;
 import org.firstinspires.ftc.teamcode.utils.Subsystem;
 
@@ -49,6 +50,9 @@ public class Limelight implements Subsystem {
     private List<LLResultTypes.ColorResult> colorResults = new ArrayList<>();
 
     public Limelight(Robot robot, MultipleTelemetry tele) {
+
+        HardwareConfig.USING_LL= true;
+
         this.limelight = robot.limelight3A;
         this.telemetry = tele;
         limelight.pipelineSwitch(1);
@@ -65,6 +69,9 @@ public class Limelight implements Subsystem {
     /** ✅ MAIN UPDATE LOOP */
     @Override
     public void update() {
+
+        limelight.updateRobotOrientation();
+
         result = limelight.getLatestResult();
         status = limelight.getStatus();
 
