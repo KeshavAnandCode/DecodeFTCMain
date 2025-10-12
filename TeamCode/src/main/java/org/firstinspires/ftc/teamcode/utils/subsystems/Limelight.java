@@ -56,6 +56,8 @@ public class Limelight implements Subsystem {
         this.telemetry = tele;
         limelight.pipelineSwitch(1);
 
+        limelight.start();
+
 
     }
 
