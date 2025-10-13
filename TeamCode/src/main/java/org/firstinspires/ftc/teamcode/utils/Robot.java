@@ -33,10 +33,10 @@ public class Robot {
 
         color1green = hardwareMap.get(DigitalChannel.class,"color1green"); //Port0-1
         color1purple = hardwareMap.get(DigitalChannel.class,"color1purple"); //Port0-1
-        //color2green = hardwareMap.get(DigitalChannel.class,"color2green"); //Port2-3
-        //color2purple = hardwareMap.get(DigitalChannel.class,"color2purple"); //Port2-3
-        //color3green = hardwareMap.get(DigitalChannel.class,"color3green"); //Port4-5
-        //color3purple = hardwareMap.get(DigitalChannel.class,"color3purple"); //Port4-5
+        color2green = hardwareMap.get(DigitalChannel.class,"color2green"); //Port2-3
+        color2purple = hardwareMap.get(DigitalChannel.class,"color2purple"); //Port2-3
+        color3green = hardwareMap.get(DigitalChannel.class,"color3green"); //Port4-5
+        color3purple = hardwareMap.get(DigitalChannel.class,"color3purple"); //Port4-5
 
 
         if (USING_LL) {
