@@ -6,6 +6,7 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
@@ -43,11 +44,15 @@ public class Limelight implements Subsystem {
     private double ty = 0.0;
     private double tync = 0.0;
 
+    private double ta = 0.0;
+
     private List<LLResultTypes.BarcodeResult> barcodeResults = new ArrayList<>();
     private List<LLResultTypes.ClassifierResult> classifierResults = new ArrayList<>();
     private List<LLResultTypes.DetectorResult> detectorResults = new ArrayList<>();
     private List<LLResultTypes.FiducialResult> fiducialResults = new ArrayList<>();
     private List<LLResultTypes.ColorResult> colorResults = new ArrayList<>();
+
+    private IMU imu;
 
     public Limelight(Robot robot, MultipleTelemetry tele) {
 
@@ -56,6 +61,10 @@ public class Limelight implements Subsystem {
         this.limelight = robot.limelight3A;
         this.telemetry = tele;
         limelight.pipelineSwitch(1);
+
+        this.imu = robot.imu;
+
+        this.imu.resetYaw();
 
 
     }
@@ -66,14 +75,18 @@ public class Limelight implements Subsystem {
 
     public void setMode(String newMode) { this.mode = newMode; }
 
+
+
     /** ✅ MAIN UPDATE LOOP */
     @Override
     public void update() {
 
-        limelight.updateRobotOrientation();
+
 
         result = limelight.getLatestResult();
         status = limelight.getStatus();
+
+
 
         if (result != null && (Objects.equals(status.getPipelineType(), "pipe_python") || result.isValid())){
             // Refresh all cached values
@@ -86,6 +99,7 @@ public class Limelight implements Subsystem {
             txnc            = result.getTxNC();
             ty              = result.getTy();
             tync            = result.getTyNC();
+            ta              = result.getTa();
             barcodeResults  = result.getBarcodeResults();
             classifierResults = result.getClassifierResults();
             detectorResults   = result.getDetectorResults();
@@ -112,6 +126,7 @@ public class Limelight implements Subsystem {
 
 
 
+
         if (result != null && result.isValid()) {
             telemetry.addData("LL Latency", getTotalLatency());
             telemetry.addData("Capture Latency", getCaptureLatency());
@@ -122,7 +137,17 @@ public class Limelight implements Subsystem {
             telemetry.addData("txnc", getTxNC());
             telemetry.addData("ty", getTy());
             telemetry.addData("tync", getTyNC());
-            telemetry.addData("Botpose", getBotPose().toString());
+            telemetry.addData("ta", getTa());
+
+
+
+
+            telemetry.addData("BotX", getBotX());
+
+            telemetry.addData("BotY", getBotY());
+
+
+
 
 
             if (Objects.equals(mode, "BR"))
@@ -175,7 +200,16 @@ public class Limelight implements Subsystem {
     public double getTx() { return tx; }
     public double getTxNC() { return txnc; }
     public double getTy() { return ty; }
-    public double getTyNC() { return tync; }
+    public double getTyNC() { return tync;}
+
+    public double getTa() {return ta;}
+
+    public double getBotX() {return getBotPose().getPosition().x;}
+
+    public double getBotY() {return getBotPose().getPosition().y;}
+
+
+
 
     public List<LLResultTypes.BarcodeResult> getBarcodeResults() { return barcodeResults; }
     public List<LLResultTypes.ClassifierResult> getClassifierResults() { return classifierResults; }
@@ -185,4 +219,6 @@ public class Limelight implements Subsystem {
 
     public LLStatus getStatus() { return status; }
     public LLResult getRawResult() { return result; }
+
+
 }
