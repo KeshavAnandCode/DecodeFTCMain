@@ -8,6 +8,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.utils.subsystems.AprilTag;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+
 public class Robot {
 
     //Initialize Public Components
@@ -17,6 +22,10 @@ public class Robot {
     public Limelight3A limelight;
     public Servo hood;
     public Servo turret;
+
+    public AprilTagProcessor aprilTagProcessor;
+
+    public VisionPortal visionPortal;
 
     public Robot (HardwareMap hardwareMap) {
 
@@ -36,6 +45,14 @@ public class Robot {
         hood = hardwareMap.servo.get("hood");
 
         turret = hardwareMap.servo.get("turret");
+
+        aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
+
+        // Create vision portal with webcam
+        visionPortal = VisionPortal.easyCreateWithDefaults(
+                hardwareMap.get(WebcamName.class, "Webcam 1"),
+                aprilTagProcessor
+        );
 
 
     }
