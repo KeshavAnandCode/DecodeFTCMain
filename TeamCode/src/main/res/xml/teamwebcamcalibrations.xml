@@ -78,7 +78,7 @@
 
     <!-- ======================================================================================= -->
 
-    <!-- Logitech HD Webcam C310, Calibrated by by Robert Atkinson, 2018.05.30 using 3DF Zephyr -->
+    <!-- Logitech HD AprilTag C310, Calibrated by by Robert Atkinson, 2018.05.30 using 3DF Zephyr -->
     <!-- <Camera vid="Logitech" pid="0x081B">
         <Calibration
             size="640 480"
@@ -97,7 +97,7 @@
 
     <!-- ======================================================================================= -->
 
-    <!-- Logitech HD Pro Webcam C920, Calibrated by Robert Atkinson, 2018.05.30 using 3DF Zephyr -->
+    <!-- Logitech HD Pro AprilTag C920, Calibrated by Robert Atkinson, 2018.05.30 using 3DF Zephyr -->
     <!-- <Camera vid="Logitech" pid="0x082D">
 
         <Calibration
@@ -146,7 +146,7 @@
 
     <!-- ======================================================================================= -->
 
-    <!-- Logitech HD Webcam C270, Calibrated by Noah Andrews, 2019.03.13 using 3DF Zephyr -->
+    <!-- Logitech HD AprilTag C270, Calibrated by Noah Andrews, 2019.03.13 using 3DF Zephyr -->
     <!--<Camera vid="Logitech" pid="0x0825">
         <Calibration
             size="640 480"

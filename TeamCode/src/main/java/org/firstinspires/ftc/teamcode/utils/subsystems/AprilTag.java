@@ -1,104 +1,240 @@
 package org.firstinspires.ftc.teamcode.utils.subsystems;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+
+import org.firstinspires.ftc.teamcode.utils.Robot;
+import org.firstinspires.ftc.teamcode.utils.Subsystem;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-@TeleOp(name = "AprilTag Detection")
-public class AprilTag extends LinearOpMode {
+public class AprilTag implements Subsystem {
 
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
 
+    private MultipleTelemetry TELE;
+
+    private boolean teleOn = false;
+
+    private int detections = 0;
+
+    List<AprilTagDetection> currentDetections;
+
+    ArrayList<ArrayList<Double>> Data = new ArrayList<>();
+
+
+
+    public AprilTag(Robot robot, MultipleTelemetry tele) {
+
+
+
+        this.aprilTag = robot.aprilTagProcessor;
+
+        this.visionPortal = robot.visionPortal;
+
+        this.TELE = tele;
+
+
+        robot.dashboard.startCameraStream(robot.camera, 30);
+
+
+    }
+
     @Override
-    public void runOpMode() {
+    public void update() {
 
-        initAprilTag();
+        currentDetections = aprilTag.getDetections();
 
-        // Display camera preview info
-        telemetry.addData("Camera Preview", "Check Driver Station for stream");
-        telemetry.addData("Status", "Initialized - Press START");
-        telemetry.update();
+        UpdateData();
 
-        waitForStart();
-
-        if (opModeIsActive()) {
-            while (opModeIsActive()) {
-
-                displayAprilTagDetections();
-
-                telemetry.update();
-                sleep(20); // Reduce CPU load
-            }
+        if(teleOn){
+            tagTELE();
+            initTelemetry();
         }
 
-        // Clean up resources
-        if (visionPortal != null) {
-            visionPortal.close();
-        }
+
+
+
     }
 
-    /**
-     * Initialize the AprilTag processor and vision portal
-     */
-    private void initAprilTag() {
-        // Create AprilTag processor with default settings
-        aprilTag = AprilTagProcessor.easyCreateWithDefaults();
+    public void initTelemetry (){
 
-        // Create vision portal with webcam
-        visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam 1"),
-                aprilTag
-        );
+        TELE.addData("Camera Preview", "Check Driver Station for stream");
+        TELE.addData("Status", "Initialized - Press START");
+
+
+
     }
 
-    /**
-     * Display telemetry data for all detected AprilTags
-     */
-    private void displayAprilTagDetections() {
-        List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+    public void tagTELE () {
 
-        telemetry.addData("# AprilTags Detected", currentDetections.size());
+        TELE.addData("# AprilTags Detected", detections);
 
         // Display info for each detected tag
-        for (AprilTagDetection detection : currentDetections) {
-            if (detection.metadata != null) {
+        for (ArrayList<Double> detection : Data) {
+            if (detection.get(0) ==1) {
                 // Known AprilTag with metadata
-                telemetry.addLine(String.format("\n==== (ID %d) %s ====",
-                        detection.id, detection.metadata.name));
+                TELE.addLine(String.format("\n==== (ID %d) %s ====",
+                        detection.get(1).intValue(), ""));
 
-                telemetry.addLine(String.format("XYZ: %6.1f %6.1f %6.1f  (inch)",
-                        detection.ftcPose.x,
-                        detection.ftcPose.y,
-                        detection.ftcPose.z));
+                TELE.addLine(String.format("XYZ: %6.1f %6.1f %6.1f  (inch)",
+                        detection.get(2),
+                        detection.get(3),
+                        detection.get(4)));
 
-                telemetry.addLine(String.format("PRY: %6.1f %6.1f %6.1f  (deg)",
-                        detection.ftcPose.pitch,
-                        detection.ftcPose.roll,
-                        detection.ftcPose.yaw));
+                TELE.addData("Distance", getDistance(detection.get(1).intValue()));
 
-                telemetry.addLine(String.format("RBE: %6.1f %6.1f %6.1f  (inch, deg, deg)",
-                        detection.ftcPose.range,
-                        detection.ftcPose.bearing,
-                        detection.ftcPose.elevation));
-            } else {
-                // Unknown AprilTag (no metadata)
-                telemetry.addLine(String.format("\n==== (ID %d) Unknown ====", detection.id));
-                telemetry.addLine(String.format("Center: %6.0f %6.0f   (pixels)",
-                        detection.center.x,
-                        detection.center.y));
+                TELE.addLine(String.format("PRY: %6.1f %6.1f %6.1f  (deg)",
+                        detection.get(5),
+                        detection.get(6),
+                        detection.get(7)));
+
+                TELE.addLine(String.format("RBE: %6.1f %6.1f %6.1f  (inch, deg, deg)",
+                        detection.get(8),
+                        detection.get(9),
+                        detection.get(10)));
             }
         }
-
-        // Display legend
-        telemetry.addLine("\n----- Key -----");
-        telemetry.addLine("XYZ = X (Right), Y (Forward), Z (Up) distance");
-        telemetry.addLine("PRY = Pitch, Roll & Yaw (rotation)");
-        telemetry.addLine("RBE = Range, Bearing & Elevation");
     }
+
+
+    public void turnTelemetryOn(boolean bool) {
+
+        teleOn = bool;
+
+    }
+
+
+
+    public void UpdateData () {
+
+        Data.clear();  // <--- THIS FIXES YOUR ISSUE
+
+
+        detections = currentDetections.size();
+
+
+        for (AprilTagDetection detection : currentDetections) {
+
+            ArrayList<Double> detectionData = new ArrayList<Double>();
+
+
+
+            if (detection.metadata != null) {
+
+                detectionData.add(1.0);
+                // Known AprilTag with metadata
+
+                detectionData.add( (double) detection.id);
+
+
+
+                detectionData.add(detection.ftcPose.x);
+                detectionData.add(detection.ftcPose.y);
+                detectionData.add(detection.ftcPose.z);
+
+
+
+                detectionData.add(detection.ftcPose.pitch);
+                detectionData.add(detection.ftcPose.roll);
+                detectionData.add(detection.ftcPose.yaw);
+
+                detectionData.add(detection.ftcPose.range);
+                detectionData.add(detection.ftcPose.bearing);
+                detectionData.add(detection.ftcPose.elevation);
+
+            } else {
+
+                detectionData.add(0, 0.0);
+
+            }
+
+            Data.add(detectionData);
+        }
+
+    }
+
+    public int getDetectionCount() {
+
+        return detections;
+
+    }
+
+    public boolean isDetected (int id){
+        return (!filterID(Data, (double) id ).isEmpty());
+    }
+
+
+
+    public double getDistance(int id) {
+        ArrayList<Double> d = filterID(Data, (double) id);
+        if (d.size() >= 5) {
+            double x = d.get(2);
+            double y = d.get(3);
+            double z = d.get(4);
+            return Math.sqrt(x*x + y*y + z*z);
+        }
+        return -1; // tag not found
+    }
+
+    // Returns the position as [x, y, z]
+    public List<Double> getPosition(int id) {
+        ArrayList<Double> d = filterID(Data, (double) id);
+        if (d.size() >= 5) {
+            List<Double> pos = new ArrayList<>();
+            pos.add(d.get(2));
+            pos.add(d.get(3));
+            pos.add(d.get(4));
+            return pos;
+        }
+        return Collections.emptyList();
+    }
+
+    // Returns orientation as [pitch, roll, yaw]
+    public List<Double> getOrientation(int id) {
+        ArrayList<Double> d = filterID(Data, (double) id);
+        if (d.size() >= 8) {
+            List<Double> ori = new ArrayList<>();
+            ori.add(d.get(5));
+            ori.add(d.get(6));
+            ori.add(d.get(7));
+            return ori;
+        }
+        return Collections.emptyList();
+    }
+
+    // Returns range, bearing, elevation as [range, bearing, elevation]
+    public List<Double> getRBE(int id) {
+        ArrayList<Double> d = filterID(Data, (double) id);
+        if (d.size() >= 11) {
+            List<Double> rbe = new ArrayList<>();
+            rbe.add(d.get(8));
+            rbe.add(d.get(9));
+            rbe.add(d.get(10));
+            return rbe;
+        }
+        return Collections.emptyList();
+    }
+
+    // Returns full raw data for debugging or custom processing
+    public ArrayList<Double> getRawData(int id) {
+        return filterID(Data, (double) id);
+    }
+
+    public static ArrayList<Double> filterID(ArrayList<ArrayList<Double>> data, double x) {
+        for (ArrayList<Double> innerList : data) {
+            // Ensure it has a second element
+            if (innerList.size() > 1 && Math.abs(innerList.get(1) - x) < 1e-9) {
+                return innerList; // Return the first match
+            }
+        }
+        // Return an empty ArrayList if no match found
+        return new ArrayList<>();
+    }
+
 }

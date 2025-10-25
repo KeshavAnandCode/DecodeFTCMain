@@ -1,21 +1,19 @@
 package org.firstinspires.ftc.teamcode.tests;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.utils.Robot;
-import org.firstinspires.ftc.teamcode.utils.subsystems.Turret;
-import org.firstinspires.ftc.teamcode.utils.subsystems.Webcam;
+import org.firstinspires.ftc.teamcode.utils.subsystems.AprilTag;
 
 
 @TeleOp
 @Config
 public class WebcamTest extends LinearOpMode {
 
-    Webcam webcam;
+    AprilTag webcam;
 
     MultipleTelemetry TELE;
 
@@ -27,9 +25,9 @@ public class WebcamTest extends LinearOpMode {
 
         robot = new Robot(hardwareMap);
 
-        TELE = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        TELE = new MultipleTelemetry(telemetry, robot.dashboard.getTelemetry());
 
-        webcam = new Webcam(robot, TELE);
+        webcam = new AprilTag(robot, TELE);
 
         webcam.turnTelemetryOn(true);
 
