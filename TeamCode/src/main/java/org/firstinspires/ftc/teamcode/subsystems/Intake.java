@@ -73,5 +73,6 @@ public class Intake implements Subsystem {
             intake.setPower(0);
         }
 
+
     }
 }
