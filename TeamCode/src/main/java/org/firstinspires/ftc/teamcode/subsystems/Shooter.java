@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.constants.ServoVars.*;
+
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -210,7 +212,6 @@ public class Shooter implements Subsystem {
 
 
 
-        //0.9974 * 355
 
 
     }
@@ -224,7 +225,7 @@ public class Shooter implements Subsystem {
             deltaAngle +=360;
         }
 
-        deltaAngle /= (0.9974*355);
+        deltaAngle /= (turret_GearRatio*turret_Range);
 
         return (0.5+deltaAngle) ;
 
