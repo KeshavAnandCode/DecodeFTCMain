@@ -19,6 +19,7 @@ public class Intake implements Subsystem {
 
     private final Servo kicker;
 
+
     private double intakePower = 0.0;
 
     private double kickerPos = 0.0;
