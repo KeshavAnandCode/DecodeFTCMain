@@ -7,6 +7,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -39,15 +40,24 @@ public class Robot {
 
     public FtcDashboard dashboard;
 
+    public DcMotorEx frontLeft;
+
+    public DcMotorEx frontRight;
+    public DcMotorEx backLeft;
+
+    public DcMotorEx backRight;
+
+
+
     public Robot (HardwareMap hardwareMap) {
 
         //Define components w/ hardware map
-
-        flywheel1 = hardwareMap.get(DcMotorEx.class, "fly1"); //Port 0
-        flywheel2 = hardwareMap.get(DcMotorEx.class, "fly2"); //Port 1
-
-        flywheel1.setDirection(DcMotorSimple.Direction.FORWARD);
-        flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
+//
+//        flywheel1 = hardwareMap.get(DcMotorEx.class, "fly1"); //Port 0
+//        flywheel2 = hardwareMap.get(DcMotorEx.class, "fly2"); //Port 1
+//
+//        flywheel1.setDirection(DcMotorSimple.Direction.FORWARD);
+//        flywheel2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
@@ -70,16 +80,25 @@ public class Robot {
         webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
 
         // Create vision portal with webcam
-        visionPortal = VisionPortal.easyCreateWithDefaults(
-                webcam,
-                aprilTagProcessor
-        );
-
-        cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
 
         dashboard = FtcDashboard.getInstance();
+
+        backLeft = hardwareMap.get(DcMotorEx.class, "bl");
+
+        backRight = hardwareMap.get(DcMotorEx.class, "br");
+
+        frontLeft = hardwareMap.get(DcMotorEx.class, "fl");
+
+        frontRight = hardwareMap.get(DcMotorEx.class, "fr");
+
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
+
 
     }
 }

@@ -2,12 +2,15 @@ package org.firstinspires.ftc.teamcode.tests;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.utils.Robot;
 import org.firstinspires.ftc.teamcode.utils.subsystems.AprilTag;
 import org.firstinspires.ftc.teamcode.utils.subsystems.CameraServo;
+import org.firstinspires.ftc.teamcode.utils.subsystems.Drivetrain;
 
 
 @TeleOp
@@ -23,6 +26,8 @@ public class TrackerTest extends LinearOpMode {
 
     AprilTag webcam;
 
+    Drivetrain drivetrain;
+
     public static double p = 0.0003, i = 0, d = 0.00001;
 
     public static boolean pidMode = false;
@@ -35,6 +40,7 @@ public class TrackerTest extends LinearOpMode {
 
 
 
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -43,6 +49,8 @@ public class TrackerTest extends LinearOpMode {
         TELE = new MultipleTelemetry(telemetry, robot.dashboard.getTelemetry());
 
         cameraServo = new CameraServo(robot, TELE);
+
+        drivetrain = new Drivetrain(robot, TELE, new GamepadEx(gamepad1));
 
 
         webcam = new AprilTag(robot, TELE);
@@ -88,6 +96,8 @@ public class TrackerTest extends LinearOpMode {
             }
 
             cameraServo.update();
+
+            drivetrain.update();
 
 
 

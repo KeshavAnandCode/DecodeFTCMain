@@ -35,12 +35,10 @@ public class AprilTag implements Subsystem {
 
         this.aprilTag = robot.aprilTagProcessor;
 
-        this.visionPortal = robot.visionPortal;
 
         this.TELE = tele;
 
 
-        robot.dashboard.startCameraStream(robot.camera, 30);
 
 
     }
