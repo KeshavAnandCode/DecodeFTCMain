@@ -13,17 +13,17 @@ import java.util.Objects;
 
 public class Drivetrain implements Subsystem {
 
-    private GamepadEx gamepad;
+    private final GamepadEx gamepad;
 
     public MultipleTelemetry TELE;
 
     private String Mode = "Default";
 
-    private DcMotorEx fl;
+    private final DcMotorEx fl;
 
-    private DcMotorEx fr;
-    private DcMotorEx bl;
-    private DcMotorEx br;
+    private final DcMotorEx fr;
+    private final DcMotorEx bl;
+    private final DcMotorEx br;
 
     private double defaultSpeed = 0.7;
 
