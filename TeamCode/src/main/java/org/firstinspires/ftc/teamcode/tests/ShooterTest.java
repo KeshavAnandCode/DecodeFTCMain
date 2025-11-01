@@ -27,7 +27,9 @@ public class ShooterTest extends LinearOpMode {
     public static double p = 0.000003, i = 0, d = 0.000001;
 
 
-    public static String mode = "MANUAL";
+    public static String flyMode = "MANUAL";
+
+    public static String turrMode = "MANUAL";
 
     public static int posTolerance = 40;
 
@@ -45,7 +47,9 @@ public class ShooterTest extends LinearOpMode {
 
         shooter.setTelemetryOn(true);
 
-        shooter.setMode(mode);
+        shooter.setTurretMode(turrMode);
+
+        shooter.setShooterMode(flyMode);
 
 
         shooter.setControllerCoefficients(p, i, d);
@@ -60,7 +64,9 @@ public class ShooterTest extends LinearOpMode {
 
             shooter.setControllerCoefficients(p, i, d);
 
-            shooter.setMode(mode);
+            shooter.setTurretMode(turrMode);
+
+            shooter.setShooterMode(flyMode);
 
             shooter.setManualPower(pow);
 
@@ -72,7 +78,7 @@ public class ShooterTest extends LinearOpMode {
 
             shooter.setPosPower(posPower);
 
-            if (servoPosition!=0.501) {shooter.setServoPosition(servoPosition);}
+            if (servoPosition!=0.501) {shooter.sethoodPosition(servoPosition);}
 
 
             shooter.update();

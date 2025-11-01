@@ -2,8 +2,11 @@ package org.firstinspires.ftc.teamcode.utils;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.libs.RR.MecanumDrive;
 
 public class Robot {
 
@@ -23,6 +26,10 @@ public class Robot {
     public Servo hood;
 
     public Servo rejecter;
+
+    public Servo turr1;
+
+    public Servo turr2;
 
 
 
@@ -45,7 +52,17 @@ public class Robot {
 
         shooter2 = hardwareMap.get(DcMotorEx.class, "shooter2");
 
+        shooter1.setDirection(DcMotorSimple.Direction.REVERSE);
+
         hood = hardwareMap.get(Servo.class, "hood");
+
+        turr1 = hardwareMap.get(Servo.class, "t1");
+
+        turr2 = hardwareMap.get(Servo.class, "t2");
+
+
+
+
 
 
 
