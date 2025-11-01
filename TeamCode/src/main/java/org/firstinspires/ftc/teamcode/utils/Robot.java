@@ -18,7 +18,13 @@ public class Robot {
 
     public DcMotorEx intake;
 
+    public DcMotorEx shooter1;
+    public DcMotorEx shooter2;
+    public Servo hood;
+
     public Servo rejecter;
+
+
 
 
 
@@ -34,6 +40,15 @@ public class Robot {
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         rejecter = hardwareMap.get(Servo.class, "rejecter");
+
+        shooter1 = hardwareMap.get(DcMotorEx.class, "shooter1");
+
+        shooter2 = hardwareMap.get(DcMotorEx.class, "shooter2");
+
+        hood = hardwareMap.get(Servo.class, "hood");
+
+
+
 
 
 
