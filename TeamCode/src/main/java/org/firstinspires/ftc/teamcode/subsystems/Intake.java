@@ -14,7 +14,6 @@ public class Intake implements Subsystem {
 
     public MultipleTelemetry TELE;
 
-
     private final DcMotorEx intake;
 
     private final Servo kicker;

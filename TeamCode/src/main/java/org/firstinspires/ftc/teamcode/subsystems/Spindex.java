@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.utils.Robot;
 
 import java.util.Objects;
@@ -14,7 +15,7 @@ import java.util.Objects;
 
 public class Spindex implements Subsystem{
 
-    public MultipleTelemetry TELE;
+    public MultipleTelemetry telemetry;
 
     private final DcMotorEx ballUpMotor;
 
@@ -23,6 +24,13 @@ public class Spindex implements Subsystem{
     private final Servo spindex1;
 
     private final Servo spindex2;
+
+    private final DigitalChannel color1Green;
+    private final DigitalChannel color1Purple;
+    private final DigitalChannel color2Green;
+    private final DigitalChannel color2Purple;
+    private final DigitalChannel color3Green;
+    private final DigitalChannel color3Purple;
 
     private double ballUpMotorPower = 0.0;
 
@@ -34,15 +42,54 @@ public class Spindex implements Subsystem{
 
     public String spindexMode = "MANUAL";
 
-    public Spindex (Robot robot, MultipleTelemetry telemetry){
+    private boolean telemetryOn = false;
+
+    public Spindex (Robot robot, MultipleTelemetry TELE){
         this.ballUpMotor = robot.ballUpMotor;
         this.ballUpServo = robot.ballUpServo;
+
         this.spindex1 = robot.spindex1;
         this.spindex2 = robot.spindex2;
+
+        this.color1Green = robot.color1Green;
+        this.color1Purple = robot.color1Purple;
+        this.color2Green = robot.color2Green;
+        this.color2Purple = robot.color2Purple;
+        this.color3Green = robot.color3Green;
+        this.color3Purple = robot.color3Purple;
+
+        this.telemetry = TELE;
     }
 
-    public String getSpindexMode(){return spindexMode}
+    public String getSpindexMode(){return spindexMode;}
 
+    public void telemetryUpdate() {
+        String color1 = "";
+        String color2 = "";
+        String color3 = "";
+        // Telemetry
+        if(this.color1Green.getState()){
+            color1 = "green";
+        } else if (this.color1Purple.getState()){
+            color1 = "purple";
+        }
+
+        if(this.color2Green.getState()){
+            color2 = "green";
+        } else if (this.color2Purple.getState()){
+            color2 = "purple";
+        }
+
+        if(this.color3Green.getState()){
+            color3 = "green";
+        } else if (this.color3Purple.getState()){
+            color3 = "purple";
+        }
+
+        telemetry.addData("Color 1", color1);
+        telemetry.addData("Color2", color2);
+        telemetry.addData("Color3", color3);
+    }
     public void setballUpMotorPower (double pow){
         this.ballUpMotorPower = pow;
     }
@@ -83,24 +130,24 @@ public class Spindex implements Subsystem{
 
     //Automatic spindex (adjust position based on coloring):
 
-    public void spindexGreen(boolean green1, boolean green2, boolean green3){
-        if (green1){
+    public void spindexGreen(){
+        if (this.color1Green.getState()){
             this.autoSpindexPos = spindex_Pos1;
-        } else if (green2){
+        } else if (this.color2Green.getState()){
             this.autoSpindexPos = spindex_Pos2;
-        } else if (green3){
+        } else if (this.color3Green.getState()){
             this.autoSpindexPos = spindex_Pos3;
         } else {
             this.autoSpindexPos = spindex_IntakeColor;
         }
     }
 
-    public void spindexPurple(boolean purple1, boolean purple2, boolean purple3){
-        if (purple1){
+    public void spindexPurple(){
+        if (this.color1Purple.getState()){
             this.autoSpindexPos = spindex_Pos1;
-        } else if (purple2){
+        } else if (this.color2Purple.getState()){
             this.autoSpindexPos = spindex_Pos2;
-        } else if (purple3){
+        } else if (this.color3Purple.getState()){
             this.autoSpindexPos = spindex_Pos3;
         } else {
             this.autoSpindexPos = spindex_IntakeColor;
@@ -119,5 +166,7 @@ public class Spindex implements Subsystem{
 
         ballUpServo.setPosition(ballUpServoPos);
         ballUpMotor.setPower(ballUpMotorPower);
+
+        telemetryUpdate();
     }
 }

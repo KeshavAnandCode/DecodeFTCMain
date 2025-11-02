@@ -203,16 +203,9 @@ public class Shooter implements Subsystem {
             fly2.setPower(0);
         }
 
-
         hoodServo.setPosition(hoodAngle);
 
         moveTurret(getTurretPosByDeltaPose(deltaPose));
-
-
-
-
-
-
 
     }
 
