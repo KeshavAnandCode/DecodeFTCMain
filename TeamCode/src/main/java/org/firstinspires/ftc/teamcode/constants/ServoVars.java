@@ -13,4 +13,14 @@ public class ServoVars {
 
     public static double rejecter_Out = 1.0;
     public static double rejecter_In = 0.0;
+
+    public static double ballUpServo_On = 1.0;
+    public static double ballUpServo_Off = 0.0;
+
+    public static double spindex_Pos1 = 0.0;
+    public static double spindex_Pos2 = 0.5;
+    public static double spindex_Pos3 = 1.0;
+    public static double spindex_IntakeColor = 0.25;
+    public static double spindex_BackupColor = 0.3;
+
 }
