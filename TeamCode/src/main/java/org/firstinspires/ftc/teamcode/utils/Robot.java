@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.utils;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -31,6 +34,29 @@ public class Robot {
 
     public Servo turr2;
 
+    public Servo spin1;
+
+    public Servo spin2;
+
+    public DigitalChannel pin0;
+
+    public DigitalChannel pin1;
+    public DigitalChannel pin2;
+    public DigitalChannel pin3;
+    public DigitalChannel pin4;
+
+    public DigitalChannel pin5;
+
+    public AnalogInput analogInput;
+
+    public AnalogInput analogInput2;
+
+
+
+
+
+
+
 
 
 
@@ -44,6 +70,13 @@ public class Robot {
         frontRight = hardwareMap.get(DcMotorEx.class, "fr");
         backLeft = hardwareMap.get(DcMotorEx.class, "bl");
         backRight = hardwareMap.get(DcMotorEx.class, "br");
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         rejecter = hardwareMap.get(Servo.class, "rejecter");
@@ -60,14 +93,28 @@ public class Robot {
 
         turr2 = hardwareMap.get(Servo.class, "t2");
 
+        spin1 = hardwareMap.get(Servo.class, "spin1");
+
+        spin2 = hardwareMap.get(Servo.class, "spin2");
+
+        pin0 = hardwareMap.get(DigitalChannel.class, "pin0");
+
+        pin1 = hardwareMap.get(DigitalChannel.class, "pin1");
+
+        pin2 = hardwareMap.get(DigitalChannel.class, "pin2");
+
+        pin3 = hardwareMap.get(DigitalChannel.class, "pin3");
+
+        pin4 = hardwareMap.get(DigitalChannel.class, "pin4");
+
+        pin5 = hardwareMap.get(DigitalChannel.class, "pin5");
 
 
 
+        analogInput = hardwareMap.get(AnalogInput.class, "analog");
 
 
-
-
-
+        analogInput2 = hardwareMap.get(AnalogInput.class, "analog2");
 
 
 

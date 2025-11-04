@@ -55,7 +55,7 @@ public class Drivetrain implements Subsystem {
         this.slowSpeed = speed;
     }
 
-    public void FieldCentric(double fwd, double strafe, double turn, double turbo){
+    public void RobotCentric(double fwd, double strafe, double turn, double turbo){
 
         double y = -fwd; // Remember, Y stick value is reversed
         double x = strafe * 1.1; // Counteract imperfect strafing
@@ -83,7 +83,7 @@ public class Drivetrain implements Subsystem {
 
         if (Objects.equals(Mode, "Default")) {
 
-            FieldCentric(
+            RobotCentric(
                     gamepad.getRightY(),
                     gamepad.getRightX(),
                     gamepad.getLeftX(),
