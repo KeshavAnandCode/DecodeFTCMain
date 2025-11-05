@@ -1,56 +1,77 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.constants.ServoVars.*;
-
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.Servo;
+
 
 import org.firstinspires.ftc.teamcode.utils.Robot;
 
 public class Intake implements Subsystem {
 
+    private GamepadEx gamepad;
+
     public MultipleTelemetry TELE;
 
-    private final DcMotorEx intake;
 
-    private final Servo kicker;
+    private DcMotorEx intake;
+
+    private double intakePower = 1.0;
+
+    private int intakeState = 0;
 
 
-    private double intakePower = 0.0;
+    public Intake (Robot robot){
 
-    private double kickerPos = 0.0;
-
-    public Intake (Robot robot, MultipleTelemetry telemetry){
 
         this.intake = robot.intake;
-        this.kicker = robot.rejecter;
+
 
     }
 
-    public void setIntakePower (double pow){
-        this.intakePower = pow;
+    public int getIntakeState() {
+        return intakeState;
     }
 
-    public double getIntakePower() {
-        return this.intakePower;
+    public void toggle(){
+        if (intakeState !=0){
+            intakeState = 0;
+        } else {
+            intakeState = 1;
+        }
     }
 
-    public void kickOut (){
-        this.kickerPos = rejecter_Out;
+    public void setIntakePower(double pow){
+        intakePower = pow;
     }
 
-    public void kickIn (){
-        this.kickerPos = rejecter_In;
+    public void intake(){
+        intakeState =1;
     }
+
+    public void reverse(){
+        intakeState =-1;
+    }
+
+
+    public void stop(){
+        intakeState =-1;
+    }
+
+
+
 
     @Override
     public void update() {
-        kicker.setPosition(kickerPos);
-        intake.setPower(intakePower);
+
+        if (intakeState == 1){
+            intake.setPower(intakePower);
+        } else if (intakeState == -1){
+            intake.setPower(-intakePower);
+        } else {
+            intake.setPower(0);
+        }
+
     }
 }
-
-

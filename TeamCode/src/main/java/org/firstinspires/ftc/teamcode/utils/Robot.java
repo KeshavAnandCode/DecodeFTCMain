@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.utils;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -22,9 +24,15 @@ public class Robot {
 
     public DcMotorEx intake;
 
+    public DcMotorEx transfer;
+
+
+
     public DcMotorEx shooter1;
     public DcMotorEx shooter2;
     public Servo hood;
+
+    public Servo transferServo;
 
     public Servo rejecter;
 
@@ -32,23 +40,29 @@ public class Robot {
 
     public Servo turr2;
 
-    public DcMotorEx ballUpMotor;
+    public Servo spin1;
 
-    public Servo ballUpServo;
+    public Servo spin2;
 
-    public Servo spindex1;
+    public DigitalChannel pin0;
 
-    public Servo spindex2;
+    public DigitalChannel pin1;
+    public DigitalChannel pin2;
+    public DigitalChannel pin3;
+    public DigitalChannel pin4;
 
-    public DigitalChannel color1Green;
-    public DigitalChannel color1Purple;
+    public DigitalChannel pin5;
+
+    public AnalogInput analogInput;
+
+    public AnalogInput analogInput2;
 
 
-    public DigitalChannel color2Green;
-    public DigitalChannel color2Purple;
 
-    public DigitalChannel color3Green;
-    public DigitalChannel color3Purple;
+
+
+
+
 
 
 
@@ -62,33 +76,55 @@ public class Robot {
         frontRight = hardwareMap.get(DcMotorEx.class, "fr");
         backLeft = hardwareMap.get(DcMotorEx.class, "bl");
         backRight = hardwareMap.get(DcMotorEx.class, "br");
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         rejecter = hardwareMap.get(Servo.class, "rejecter");
 
         shooter1 = hardwareMap.get(DcMotorEx.class, "shooter1");
+
         shooter2 = hardwareMap.get(DcMotorEx.class, "shooter2");
+
         shooter1.setDirection(DcMotorSimple.Direction.REVERSE);
 
         hood = hardwareMap.get(Servo.class, "hood");
 
         turr1 = hardwareMap.get(Servo.class, "t1");
+
         turr2 = hardwareMap.get(Servo.class, "t2");
 
-        ballUpMotor = hardwareMap.get(DcMotorEx.class, "ballUpMotor");
-        ballUpServo = hardwareMap.get(Servo.class, "ballUpServo");
+        spin1 = hardwareMap.get(Servo.class, "spin1");
 
-        spindex1 = hardwareMap.get(Servo.class, "spindex1");
-        spindex2 = hardwareMap.get(Servo.class, "spindex2");
+        spin2 = hardwareMap.get(Servo.class, "spin2");
 
-        color1Green = hardwareMap.get(DigitalChannel.class, "color1Green");
-        color1Purple = hardwareMap.get(DigitalChannel.class, "color1Purple");
+        pin0 = hardwareMap.get(DigitalChannel.class, "pin0");
 
-        color2Green = hardwareMap.get(DigitalChannel.class, "color2Green");
-        color2Purple = hardwareMap.get(DigitalChannel.class, "color2Purple");
+        pin1 = hardwareMap.get(DigitalChannel.class, "pin1");
 
-        color3Green = hardwareMap.get(DigitalChannel.class, "color1Green");
-        color3Purple = hardwareMap.get(DigitalChannel.class, "color3Purple");
+        pin2 = hardwareMap.get(DigitalChannel.class, "pin2");
+
+        pin3 = hardwareMap.get(DigitalChannel.class, "pin3");
+
+        pin4 = hardwareMap.get(DigitalChannel.class, "pin4");
+
+        pin5 = hardwareMap.get(DigitalChannel.class, "pin5");
+
+
+
+        analogInput = hardwareMap.get(AnalogInput.class, "analog");
+
+
+        analogInput2 = hardwareMap.get(AnalogInput.class, "analog2");
+
+        transfer = hardwareMap.get(DcMotorEx.class, "transfer");
+
+        transferServo = hardwareMap.get(Servo.class, "transferServo");
 
 
     }
