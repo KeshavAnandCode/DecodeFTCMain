@@ -43,8 +43,7 @@ public class Intake implements Subsystem {
     }
 
     public void intakeMinPower(){
-        intakePower = 0.5;
-        intakeState = 1;
+        intakeState = 2;
     }
 
     public void intake(){
@@ -57,7 +56,7 @@ public class Intake implements Subsystem {
 
 
     public void stop(){
-        intakeState =-1;
+        intakeState =0;
     }
 
 
@@ -70,7 +69,9 @@ public class Intake implements Subsystem {
             intake.setPower(intakePower);
         } else if (intakeState == -1){
             intake.setPower(-intakePower);
-        } else {
+        } else if (intakeState == 2){
+            intake.setPower(intakePower);
+        }else {
             intake.setPower(0);
         }
 
