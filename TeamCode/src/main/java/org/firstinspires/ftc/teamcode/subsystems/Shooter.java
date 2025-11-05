@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.constants.ServoVars.*;
+import static org.firstinspires.ftc.teamcode.constants.ShooterVars.*;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -50,9 +50,9 @@ public class Shooter implements Subsystem {
 
 
 
-    private String shooterMode = "AUTO";
+    private String shooterMode = "MANUAL";
 
-    private String turretMode = "AUTO";
+    private String turretMode = "MANUAL";
 
 
     public Shooter(Robot robot, MultipleTelemetry TELE) {
