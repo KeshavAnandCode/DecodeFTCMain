@@ -42,8 +42,9 @@ public class Intake implements Subsystem {
         }
     }
 
-    public void setIntakePower(double pow){
-        intakePower = pow;
+    public void intakeMinPower(){
+        intakePower = 0.5;
+        intakeState = 1;
     }
 
     public void intake(){

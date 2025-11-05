@@ -58,6 +58,8 @@ public class TeleopV1 extends LinearOpMode {
 
     public static int spindexerPos = 0;
 
+    public double time = 0.0;
+
 
 
     @Override
@@ -109,6 +111,8 @@ public class TeleopV1 extends LinearOpMode {
 
         spindexer.setTelemetryOn(true);
 
+        time = getRuntime();
+
 
         waitForStart();
 
@@ -121,11 +125,6 @@ public class TeleopV1 extends LinearOpMode {
             drivetrain.update();
 
             TELE.update();
-
-            transfer.setTransferPower(power);
-
-            transfer.setTransferPosition(pos);
-
 
             transfer.update();
 
@@ -176,14 +175,17 @@ public class TeleopV1 extends LinearOpMode {
 
 
             if (g2Circle.wasJustPressed()){
+                intake.intakeMinPower();
                 spindexer.outtake3();
             }
 
             if (g2Triangle.wasJustPressed()){
+                intake.intakeMinPower();
                 spindexer.outtake2();
             }
 
             if (g2Square.wasJustPressed()){
+                intake.intakeMinPower();
                 spindexer.outtake1();
             }
 
