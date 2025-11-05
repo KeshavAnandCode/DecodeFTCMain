@@ -24,9 +24,15 @@ public class Robot {
 
     public DcMotorEx intake;
 
+    public DcMotorEx transfer;
+
+
+
     public DcMotorEx shooter1;
     public DcMotorEx shooter2;
     public Servo hood;
+
+    public Servo transferServo;
 
     public Servo rejecter;
 
@@ -73,10 +79,10 @@ public class Robot {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         rejecter = hardwareMap.get(Servo.class, "rejecter");
@@ -116,7 +122,9 @@ public class Robot {
 
         analogInput2 = hardwareMap.get(AnalogInput.class, "analog2");
 
+        transfer = hardwareMap.get(DcMotorEx.class, "transfer");
 
+        transferServo = hardwareMap.get(Servo.class, "transferServo");
 
 
     }

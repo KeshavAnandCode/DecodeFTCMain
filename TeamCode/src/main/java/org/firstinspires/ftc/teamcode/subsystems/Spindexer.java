@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.utils.Robot;
 
+import java.util.ArrayList;
+
 public class Spindexer implements Subsystem{
 
     private Servo s1;
@@ -33,6 +35,21 @@ public class Spindexer implements Subsystem{
     private double position = 0.501;
 
     private boolean telemetryOn = false;
+
+    private boolean ball0 = false;
+
+    private boolean ball1 = false;
+
+    private boolean ball2 = false;
+
+    private boolean green0 = false;
+
+    private boolean green1 = false;
+
+    private boolean green2 = false;
+
+
+
 
     public Spindexer (Robot robot, MultipleTelemetry tele){
 
@@ -59,16 +76,40 @@ public class Spindexer implements Subsystem{
     }
 
     public void colorSensorTelemetry() {
-        TELE.addData("pin0", p0.getState());
-        TELE.addData("pin1", p1.getState());
-        TELE.addData("pin2", p2.getState());
-        TELE.addData("pin3", p3.getState());
-        TELE.addData("pin4", p4.getState());
-        TELE.addData("pin5", p5.getState());
-        TELE.addData("Analog", (input.getVoltage()));
 
-        TELE.addData("Analog2", (input2.getVoltage()));
 
+        TELE.addData("ball0", ball0);
+        TELE.addData("ball1", ball1);
+        TELE.addData("ball2", ball2);
+        TELE.addData("green0", green0);
+        TELE.addData("green1", green1);
+        TELE.addData("green2", green2);
+
+
+
+    }
+
+    public void checkForBalls() {
+        if (p0.getState()){
+            ball0 = true;
+            green0 = p1.getState();
+        } else {
+            ball0 = false;
+        }
+
+        if (p2.getState()){
+            ball1 = true;
+            green1 = p3.getState();
+        } else {
+            ball1 = false;
+        }
+
+        if (p4.getState()){
+            ball2 = true;
+            green2 = p5.getState();
+        } else {
+            ball2 = false;
+        }
     }
 
     public void setPosition (double pos) {
@@ -77,6 +118,15 @@ public class Spindexer implements Subsystem{
 
     public void intake () {
         position = spindexer_intakePos;
+    }
+
+    public void intakeShake(double runtime) {
+        if ((runtime % 0.33) >0.167) {
+            position = spindexer_intakePos + 0.02;
+        } else {
+            position = spindexer_intakePos - 0.02;
+
+        }
     }
 
     public void outtake3 () {
@@ -90,6 +140,47 @@ public class Spindexer implements Subsystem{
     public void outtake1 () {
         position = spindexer_outtakeBall1;
     }
+
+    public void outtakeGreen() {
+        if (green0) {
+            outtake1();
+        } else if (green1){
+            outtake2();
+        } else if (green2) {
+            outtake3();
+        }
+    }
+
+    public void outtakePurpleFs() {
+        if (!green0 && ball0) {
+            outtake1();
+        } else if (!green1 && ball1){
+            outtake2();
+        } else if (!green2 && ball2) {
+            outtake3();
+        }
+    }
+
+    public void outtakeGreenFs() {
+        if (green0 && ball0) {
+            outtake1();
+        } else if (green1 && ball1){
+            outtake2();
+        } else if (green2 && ball2) {
+            outtake3();
+        }
+    }
+
+    public void outtakePurple() {
+        if (!green0) {
+            outtake1();
+        } else if (!green1){
+            outtake2();
+        } else if (!green2) {
+            outtake3();
+        }
+    }
+
 
 
 
@@ -106,6 +197,8 @@ public class Spindexer implements Subsystem{
         if (telemetryOn) {
             colorSensorTelemetry();
         }
+
+        checkForBalls();
 
     }
 }
