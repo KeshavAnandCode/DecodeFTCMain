@@ -47,7 +47,7 @@ public class TeleopV1 extends LinearOpMode {
 
     public static double power = 0.0;
 
-    public static double pos = 0.5;
+    public static double pos = 0.54;
 
     ToggleButtonReader g1RightBumper;
 
@@ -65,6 +65,10 @@ public class TeleopV1 extends LinearOpMode {
     ToggleButtonReader g2DpadUp;
 
     ToggleButtonReader g2DpadDown;
+
+    ToggleButtonReader g2DpadRight;
+
+    ToggleButtonReader g2DpadLeft;
     public double g1RightBumperStamp = 0.0;
 
     public double g2LeftBumperStamp = 0.0;
@@ -79,12 +83,17 @@ public class TeleopV1 extends LinearOpMode {
 
     public boolean autotrack = true;
 
+    public double offset = 0.0;
+
+    public boolean notShooting = true;
+
 
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         drive  = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+
 
 
 
@@ -133,6 +142,16 @@ public class TeleopV1 extends LinearOpMode {
         g2DpadDown  = new ToggleButtonReader(
                 g2, GamepadKeys.Button.DPAD_DOWN
         );
+
+        g2DpadLeft  = new ToggleButtonReader(
+                g2, GamepadKeys.Button.DPAD_LEFT
+        );
+
+
+        g2DpadRight  = new ToggleButtonReader(
+                g2, GamepadKeys.Button.DPAD_RIGHT
+        );
+
 
 
 
@@ -204,9 +223,21 @@ public class TeleopV1 extends LinearOpMode {
                 pos +=0.02;
             }
 
-            if (gamepad2.dpad_left){
+            g2DpadLeft.readValue();
+
+            g2DpadRight.readValue();
+
+            if(g2DpadLeft.wasJustPressed()){
+                offset -=0.02;
+            }
+
+            if(g2DpadRight.wasJustPressed()){
+                offset +=0.02;
+            }
+
+            if (gamepad2.right_trigger > 0.5){
                 pos = shooter.getAngleByDist(
-                        shooter.trackGoal(drive.localizer.getPose(), new Pose2d(-10, 0, 0))
+                        shooter.trackGoal(drive.localizer.getPose(), new Pose2d(-10, 0, 0),  offset)
                 );
 
             }
@@ -218,18 +249,20 @@ public class TeleopV1 extends LinearOpMode {
 
 
 
+
+
             if (Math.abs(gamepad2.right_stick_x) < 0.1 && autotrack) {
 
 
 
 
-                shooter.trackGoal(drive.localizer.getPose(), new Pose2d(-10, 0, 0));
+                shooter.trackGoal(drive.localizer.getPose(), new Pose2d(-10, 0, 0), offset);
 
             } else {
 
                 autotrack = false;
 
-                shooter.moveTurret(shooter.getTurretPosition() - gamepad2.right_stick_x* 0.04);
+                shooter.moveTurret(shooter.getTurretPosition() - gamepad2.right_stick_x* 0.02);
 
             }
 
@@ -243,6 +276,8 @@ public class TeleopV1 extends LinearOpMode {
                 transfer.setTransferPower(1);
                 transfer.transferIn();
                 shooter.setManualPower(1);
+
+                notShooting = false;
 
             }
 
@@ -260,13 +295,14 @@ public class TeleopV1 extends LinearOpMode {
 
             if (g2LeftBumper.wasJustPressed()){
                 g2LeftBumperStamp = getRuntime();
+                notShooting = false;
                 scoreAll = true;
             }
 
             if (scoreAll) {
                 double time = getRuntime() - g2LeftBumperStamp;
 
-                shooter.trackGoal(drive.localizer.getPose(), new Pose2d(-2, 0, 0));
+                shooter.trackGoal(drive.localizer.getPose(), new Pose2d(-10, 0, 0), offset);
 
                 shooter.setManualPower(1);
 
@@ -335,7 +371,9 @@ public class TeleopV1 extends LinearOpMode {
 
         if (g1RightBumper.wasJustPressed()){
 
-            shooter.setManualPower(0);
+            notShooting = true;
+
+
 
 
             if (getRuntime() - g1RightBumperStamp < 0.3){
@@ -343,6 +381,13 @@ public class TeleopV1 extends LinearOpMode {
             } else {
                 intake.toggle();
             }
+
+            if (intake.getIntakeState()==1){
+                shooter.setManualPower(0);
+            }
+
+
+
 
             spindexer.intake();
             
@@ -353,9 +398,14 @@ public class TeleopV1 extends LinearOpMode {
 
         }
 
-        if (intake.getIntakeState()==1) {
+
+        if (intake.getIntakeState()==1 && notShooting) {
+
             spindexer.intakeShake(getRuntime());
-        } else {
+
+        } else
+
+        {
 
 
             if (g2Circle.wasJustPressed()){

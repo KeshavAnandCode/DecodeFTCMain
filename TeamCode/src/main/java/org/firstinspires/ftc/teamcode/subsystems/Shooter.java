@@ -168,7 +168,7 @@ public class Shooter implements Subsystem {
     public void setTurretMode(String mode){ turretMode = mode;}
 
 
-    public double trackGoal(Pose2d robotPose, Pose2d goalPose){
+    public double trackGoal(Pose2d robotPose, Pose2d goalPose, double offset){
 
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -196,7 +196,7 @@ public class Shooter implements Subsystem {
 
 //        hoodServo.setPosition(hoodAngle);
 
-        moveTurret(getTurretPosByDeltaPose(deltaPose));
+        moveTurret(getTurretPosByDeltaPose(deltaPose, offset));
 
         return distance;
 
@@ -209,7 +209,7 @@ public class Shooter implements Subsystem {
 
     }
 
-    public double getTurretPosByDeltaPose (Pose2d dPose){
+    public double getTurretPosByDeltaPose (Pose2d dPose, double offset){
 
         double deltaAngle = Math.toDegrees(dPose.heading.toDouble());
 
@@ -235,7 +235,7 @@ public class Shooter implements Subsystem {
         telemetry.addData("AtanAngle", aTanAngle);
 
 
-        return (0.30-deltaAngle) ;
+        return ((0.30-deltaAngle) + offset);
 
 
 
