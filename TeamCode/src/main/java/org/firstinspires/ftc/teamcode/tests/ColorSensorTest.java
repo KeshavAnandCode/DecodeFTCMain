@@ -23,12 +23,12 @@ public class ColorSensorTest extends LinearOpMode{
         if (isStopRequested()) return;
 
         while (opModeIsActive()){
-            TELE.addData("Green1:", robot.pin0.getState());
-            TELE.addData("Purple1:", robot.pin1.getState());
-            TELE.addData("Green2:", robot.pin2.getState());
-            TELE.addData("Purple2:", robot.pin3.getState());
-            TELE.addData("Green3:", robot.pin4.getState());
-            TELE.addData("Purple3:", robot.pin5.getState());
+            TELE.addData("Green1:", robot.pin1.getState());
+            TELE.addData("Purple1:", robot.pin0.getState());
+            TELE.addData("Green2:", robot.pin3.getState());
+            TELE.addData("Purple2:", robot.pin2.getState());
+            TELE.addData("Green3:", robot.pin5.getState());
+            TELE.addData("Purple3:", robot.pin4.getState());
 
             TELE.update();
         }
