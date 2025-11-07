@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.constants.ServoPositions.*;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -30,6 +32,16 @@ public class Transfer implements Subsystem{
     public void setTransferPower (double pow){
         this.motorPow = pow;
     }
+
+    public void transferOut(){
+        this.setTransferPosition(transferServo_out);
+    }
+
+    public void transferIn(){
+        this.setTransferPosition(transferServo_in);
+    }
+
+
 
 
 

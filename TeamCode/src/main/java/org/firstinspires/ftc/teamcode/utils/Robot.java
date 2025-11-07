@@ -126,6 +126,8 @@ public class Robot {
 
         transferServo = hardwareMap.get(Servo.class, "transferServo");
 
+        transfer.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
     }
 }

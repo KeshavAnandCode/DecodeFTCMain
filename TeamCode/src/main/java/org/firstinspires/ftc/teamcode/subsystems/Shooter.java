@@ -168,7 +168,7 @@ public class Shooter implements Subsystem {
     public void setTurretMode(String mode){ turretMode = mode;}
 
 
-    public void trackGoal(Pose2d robotPose, Pose2d goalPose, boolean shooterOn){
+    public double trackGoal(Pose2d robotPose, Pose2d goalPose){
 
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -178,7 +178,7 @@ public class Shooter implements Subsystem {
         Pose2d deltaPose = new Pose2d(
                 goalPose.position.x - robotPose.position.x,
                 goalPose.position.y - robotPose.position.y,
-                goalPose.heading.toDouble() - robotPose.heading.toDouble()
+                goalPose.heading.toDouble() - (robotPose.heading.toDouble())
         );
 
         double distance = Math.sqrt(
@@ -187,24 +187,18 @@ public class Shooter implements Subsystem {
                 + Poses.relativeGoalHeight * Poses.relativeGoalHeight
         );
 
+        telemetry.addData("dst", distance);
+
         double shooterPow = getPowerByDist(distance);
 
         double hoodAngle = getAngleByDist(distance);
 
-        if (shooterOn){
 
-            fly1.setVelocity(shooterPow);
-            fly2.setPower(fly1.getPower());
-
-        } else {
-            fly1.setPower(0);
-            fly2.setPower(0);
-        }
-
-
-        hoodServo.setPosition(hoodAngle);
+//        hoodServo.setPosition(hoodAngle);
 
         moveTurret(getTurretPosByDeltaPose(deltaPose));
+
+        return distance;
 
 
 
@@ -220,16 +214,37 @@ public class Shooter implements Subsystem {
         double deltaAngle = Math.toDegrees(dPose.heading.toDouble());
 
 
-        if (deltaAngle < -180) {
-            deltaAngle +=360;
+        double aTanAngle = Math.toDegrees(Math.atan(dPose.position.y/dPose.position.x));
+
+        telemetry.addData("deltaAngle", deltaAngle);
+
+
+
+        if (deltaAngle > 90) {
+            deltaAngle -=360;
         }
 
-        deltaAngle /= (0.9974*355);
 
-        return (0.5+deltaAngle) ;
+
+//        deltaAngle += aTanAngle;
+
+        deltaAngle /= (335);
+
+        telemetry.addData("dAngle", deltaAngle);
+
+        telemetry.addData("AtanAngle", aTanAngle);
+
+
+        return (0.30-deltaAngle) ;
+
 
 
     }
+
+    //62, 0.44
+
+    //56.5, 0.5
+
 
     public double getPowerByDist(double dist){
 
@@ -239,8 +254,15 @@ public class Shooter implements Subsystem {
 
     public double getAngleByDist(double dist){
 
-        //TODO: ADD LOGIC
-        return  dist;
+
+        double newDist = dist - 56.5;
+
+        double pos = newDist*((0.44-0.5)/(62-56.5)) + 0.46;
+
+
+
+
+        return  pos;
     }
 
 
@@ -285,7 +307,7 @@ public class Shooter implements Subsystem {
         }
 
         if (Objects.equals(turretMode, "MANUAL")){
-            hoodServo.setPosition(hoodPos);
+//            hoodServo.setPosition(hoodPos);
 
             moveTurret(turretPos);
 
