@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Rejecter;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.Spindexer;
 import org.firstinspires.ftc.teamcode.subsystems.Transfer;
@@ -22,12 +23,15 @@ import org.firstinspires.ftc.teamcode.utils.Robot;
 
 public class TeleopV1 extends LinearOpMode {
 
+    public static double rpos = 0.5;
 
     Robot robot;
 
     Drivetrain drivetrain;
 
     Intake intake;
+
+    Rejecter rejecter;
 
     Spindexer spindexer;
 
@@ -123,7 +127,6 @@ public class TeleopV1 extends LinearOpMode {
 
         transfer = new Transfer(robot);
 
-
         spindexer = new Spindexer(robot, TELE);
 
         shooter = new Shooter(robot, TELE);
@@ -140,6 +143,8 @@ public class TeleopV1 extends LinearOpMode {
         while(opModeIsActive()){
 
             intake();
+
+            rejecter.rejecterPos(rpos);
 
             drivetrain.update();
 
