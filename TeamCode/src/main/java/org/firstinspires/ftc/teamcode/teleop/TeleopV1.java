@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static org.firstinspires.ftc.teamcode.constants.Poses.teleStart;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -118,7 +120,7 @@ public class TeleopV1 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        drive  = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+        drive  = new MecanumDrive(hardwareMap, teleStart);
 
 
 
@@ -216,7 +218,7 @@ public class TeleopV1 extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        drive  = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+        drive  = new MecanumDrive(hardwareMap, teleStart);
 
 
         while(opModeIsActive()){
