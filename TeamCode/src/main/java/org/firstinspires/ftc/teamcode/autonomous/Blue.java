@@ -15,9 +15,13 @@ import static org.firstinspires.ftc.teamcode.constants.Poses.y2_b;
 import static org.firstinspires.ftc.teamcode.constants.Poses.y3;
 import static org.firstinspires.ftc.teamcode.constants.ServoPositions.*;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -56,6 +60,40 @@ public class Blue extends LinearOpMode {
     Spindexer spindexer;
 
     Transfer transfer;
+
+    public class shooterOn implements Action {
+
+        int ticker = 1;
+
+        double stamp = 0.0;
+
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+
+            if (ticker ==1){
+                stamp = getRuntime();
+
+            }
+
+            ticker ++;
+
+            if (getRuntime() - stamp < 0.2){
+                return true;
+            } else if (getRuntime() - stamp < 0.4) {
+
+                shooter.setManualPower(1);
+
+                shooter.update();
+
+                return true;
+            } else {
+
+                return false;
+
+            }
+        }
+    }
 
 
 
@@ -141,14 +179,18 @@ public class Blue extends LinearOpMode {
 
             robot.hood.setPosition(hoodDefault);
 
-            shooter.setTurretPosition(0.33);
+            shooter.setTurretPosition(0.28);
 
             aprilTag.initTelemetry();
 
             aprilTag.update();
             shooter.update();
 
+            TELE.addData("hood", hoodDefault);
+
             TELE.update();
+
+
         }
 
 
@@ -169,7 +211,8 @@ public class Blue extends LinearOpMode {
 
             Actions.runBlocking(
                     new ParallelAction(
-                            traj1.build()
+                            traj1.build(),
+                            new shooterOn()
                     )
             );
 
@@ -232,7 +275,7 @@ public class Blue extends LinearOpMode {
                     transfer.transferOut();
                     spindexer.outtake3();
 
-                    shooter.setManualPower(0);
+                    shooter.setManualPower(1);
 
                 }
 
@@ -317,7 +360,7 @@ public class Blue extends LinearOpMode {
                     transfer.transferOut();
                     spindexer.outtake3();
 
-                    shooter.setManualPower(0);
+                    shooter.setManualPower(1);
 
                 }
 
@@ -400,7 +443,7 @@ public class Blue extends LinearOpMode {
                     transfer.transferOut();
                     spindexer.outtake3();
 
-                    shooter.setManualPower(0);
+                    shooter.setManualPower(1);
 
                 }
 

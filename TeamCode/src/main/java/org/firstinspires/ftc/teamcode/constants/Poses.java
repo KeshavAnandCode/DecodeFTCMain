@@ -20,7 +20,7 @@ public class Poses {
     public static double x2_b = 65, y2_b = 35, h2_b = Math.toRadians(135);
 
 
-    public static double x3 = 45, y3 = 53, h3 = Math.toRadians(135);
+    public static double x3 = 34, y3 = 61, h3 = Math.toRadians(135);
 
     public static Pose2d teleStart = new Pose2d(x1,-10,0);
 
