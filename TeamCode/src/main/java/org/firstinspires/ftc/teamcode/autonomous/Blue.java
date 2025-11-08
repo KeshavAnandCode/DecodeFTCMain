@@ -13,7 +13,7 @@ import static org.firstinspires.ftc.teamcode.constants.Poses.y1;
 import static org.firstinspires.ftc.teamcode.constants.Poses.y2;
 import static org.firstinspires.ftc.teamcode.constants.Poses.y2_b;
 import static org.firstinspires.ftc.teamcode.constants.Poses.y3;
-import static org.firstinspires.ftc.teamcode.constants.ServoPositions.transferServo_out;
+import static org.firstinspires.ftc.teamcode.constants.ServoPositions.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -94,7 +94,7 @@ public class Blue extends LinearOpMode {
 
         Intake intake = new Intake(robot);
 
-        robot.hood.setPosition(0.54);
+        robot.hood.setPosition(hoodDefault);
 
 
 
@@ -131,6 +131,16 @@ public class Blue extends LinearOpMode {
 
         while(opModeInInit()) {
 
+            if (gamepad2.dpadUpWasPressed()){
+                hoodDefault -= 0.02;
+            }
+
+            if (gamepad2.dpadDownWasPressed()){
+                hoodDefault += 0.02;
+            }
+
+            robot.hood.setPosition(hoodDefault);
+
             shooter.setTurretPosition(0.33);
 
             aprilTag.initTelemetry();
@@ -148,7 +158,7 @@ public class Blue extends LinearOpMode {
 
         if (opModeIsActive()){
 
-            robot.hood.setPosition(0.54);
+            robot.hood.setPosition(hoodDefault);
 
             transfer.setTransferPower(1);
 

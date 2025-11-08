@@ -122,13 +122,23 @@ public class Spindexer implements Subsystem{
     }
 
     public void intakeShake(double runtime) {
-        if ((runtime % 0.33) >0.167) {
-            position = spindexer_intakePos + 0.02;
+        if ((runtime % 0.25) >0.125) {
+            position = spindexer_intakePos + 0.04;
         } else {
-            position = spindexer_intakePos - 0.02;
+            position = spindexer_intakePos - 0.04;
 
         }
     }
+
+    public void outtake3Shake(double runtime) {
+        if ((runtime % 0.25) >0.125) {
+            position = spindexer_outtakeBall3 + 0.04;
+        } else {
+            position = spindexer_outtakeBall3 - 0.04;
+
+        }
+    }
+
 
     public void outtake3 () {
         position = spindexer_outtakeBall3;

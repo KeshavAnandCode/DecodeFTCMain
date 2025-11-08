@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import static org.firstinspires.ftc.teamcode.constants.Poses.teleStart;
+import static org.firstinspires.ftc.teamcode.constants.ServoPositions.hoodDefault;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -49,7 +50,7 @@ public class TeleopV1 extends LinearOpMode {
 
     public static double power = 0.0;
 
-    public static double pos = 0.54;
+    public static double pos = hoodDefault;
 
     public boolean all = false;
 
@@ -239,6 +240,10 @@ public class TeleopV1 extends LinearOpMode {
 
             if (g1LeftBumper.wasJustPressed()){
                 g2LeftBumperStamp = getRuntime();
+
+
+
+                spindexer.intakeShake(getRuntime());
 
                 leftBumper = true;
             }

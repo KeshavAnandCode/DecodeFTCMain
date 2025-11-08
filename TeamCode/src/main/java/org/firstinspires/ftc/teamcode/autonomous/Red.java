@@ -27,6 +27,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.Spindexer;
 import org.firstinspires.ftc.teamcode.subsystems.Transfer;
 import org.firstinspires.ftc.teamcode.utils.Robot;
+import static org.firstinspires.ftc.teamcode.constants.ServoPositions.*;
+
 
 
 @Config
@@ -80,7 +82,7 @@ public class Red extends LinearOpMode {
 
         shooter.setShooterMode("MANUAL");
 
-        shooter.sethoodPosition(0.53);
+        shooter.sethoodPosition(hoodDefault);
 
         transfer = new Transfer(robot);
 
@@ -88,7 +90,7 @@ public class Red extends LinearOpMode {
 
         Intake intake = new Intake(robot);
 
-        robot.hood.setPosition(0.54);
+        robot.hood.setPosition(hoodDefault);
 
 
 
@@ -125,6 +127,16 @@ public class Red extends LinearOpMode {
 
         while(opModeInInit()) {
 
+            if (gamepad2.dpadUpWasPressed()){
+                hoodDefault -= 0.02;
+            }
+
+            if (gamepad2.dpadDownWasPressed()){
+                hoodDefault += 0.02;
+            }
+
+            robot.hood.setPosition(hoodDefault);
+
             shooter.setTurretPosition(0.33);
 
             aprilTag.initTelemetry();
@@ -142,7 +154,7 @@ public class Red extends LinearOpMode {
 
         if (opModeIsActive()){
 
-            robot.hood.setPosition(0.54);
+            robot.hood.setPosition(hoodDefault);
 
             transfer.setTransferPower(1);
 
