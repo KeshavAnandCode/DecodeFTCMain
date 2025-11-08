@@ -13,6 +13,7 @@ import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.libs.RR.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -97,7 +98,7 @@ public class TeleopV1 extends LinearOpMode {
 
     MecanumDrive drive ;
 
-    public boolean autotrack = true;
+    public boolean autotrack = false;
 
     public int last = 0;
     public int second = 0;
@@ -258,6 +259,8 @@ public class TeleopV1 extends LinearOpMode {
                 }
 
             }
+
+
 
 
             intake();

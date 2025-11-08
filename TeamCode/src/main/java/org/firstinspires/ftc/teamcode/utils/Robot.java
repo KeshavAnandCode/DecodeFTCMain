@@ -66,6 +66,8 @@ public class Robot {
 
     public WebcamName webcam;
 
+    public DcMotorEx shooterEncoder;
+
 
 
 
@@ -143,6 +145,8 @@ public class Robot {
 
 
         webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+
 
 
 

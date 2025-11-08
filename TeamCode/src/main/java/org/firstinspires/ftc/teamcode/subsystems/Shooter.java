@@ -20,6 +20,8 @@ import java.util.Objects;
 public class Shooter implements Subsystem {
     private final DcMotorEx fly1;
     private final DcMotorEx fly2;
+
+    private final DcMotorEx encoder;
     private final Servo hoodServo;
 
     private final Servo turret1;
@@ -75,6 +77,8 @@ public class Shooter implements Subsystem {
         this.turret1 = robot.turr1;
 
         this.turret2 = robot.turr2;
+
+        this.encoder = robot.shooterEncoder;
 
 
 
@@ -266,6 +270,8 @@ public class Shooter implements Subsystem {
     }
 
 
+
+
     public void setTelemetryOn(boolean state){telemetryOn = state;}
 
     public void moveTurret(double pos){
@@ -290,9 +296,16 @@ public class Shooter implements Subsystem {
             fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+            fly1.setVelocity(velocity);
 
-            fly1.setVelocity(velocity, AngleUnit.DEGREES);
-            fly2.setVelocity(velocity, AngleUnit.DEGREES);
+            fly2.setPower(fly1.getPower());
+
+
+
+
+
+
+
         }
 
         else if (Objects.equals(shooterMode, "POS")){
