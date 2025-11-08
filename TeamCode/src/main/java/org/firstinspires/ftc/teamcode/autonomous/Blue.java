@@ -1,25 +1,31 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import static org.firstinspires.ftc.teamcode.constants.Poses.*;
-import static org.firstinspires.ftc.teamcode.constants.ServoPositions.*;
-
-import androidx.annotation.NonNull;
+import static org.firstinspires.ftc.teamcode.constants.Poses.h1;
+import static org.firstinspires.ftc.teamcode.constants.Poses.h2;
+import static org.firstinspires.ftc.teamcode.constants.Poses.h2_b;
+import static org.firstinspires.ftc.teamcode.constants.Poses.h3;
+import static org.firstinspires.ftc.teamcode.constants.Poses.teleStart;
+import static org.firstinspires.ftc.teamcode.constants.Poses.x1;
+import static org.firstinspires.ftc.teamcode.constants.Poses.x2;
+import static org.firstinspires.ftc.teamcode.constants.Poses.x2_b;
+import static org.firstinspires.ftc.teamcode.constants.Poses.x3;
+import static org.firstinspires.ftc.teamcode.constants.Poses.y1;
+import static org.firstinspires.ftc.teamcode.constants.Poses.y2;
+import static org.firstinspires.ftc.teamcode.constants.Poses.y2_b;
+import static org.firstinspires.ftc.teamcode.constants.Poses.y3;
+import static org.firstinspires.ftc.teamcode.constants.ServoPositions.transferServo_out;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.constants.ServoPositions;
 import org.firstinspires.ftc.teamcode.libs.RR.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.AprilTag;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
@@ -31,7 +37,7 @@ import org.firstinspires.ftc.teamcode.utils.Robot;
 
 @Config
 @Autonomous
-public class Red extends LinearOpMode {
+public class Blue extends LinearOpMode {
 
     Robot robot;
 
@@ -102,26 +108,26 @@ public class Red extends LinearOpMode {
 
 
         TrajectoryActionBuilder traj2 = drive.actionBuilder(new Pose2d(x1, y1, h1))
-                .turnTo(Math.toRadians(135))
-                .strafeToLinearHeading(new Vector2d(x2, y2), h2 );
+                .turnTo(Math.toRadians(-135))
+                .strafeToLinearHeading(new Vector2d(x2, -y2), -h2 );
 
 
-        TrajectoryActionBuilder traj3 = drive.actionBuilder(new Pose2d(x2, y2, h2))
+        TrajectoryActionBuilder traj3 = drive.actionBuilder(new Pose2d(x2, -y2, -h2))
                 .strafeToLinearHeading(new Vector2d(x1, y1), h1 );
 
         TrajectoryActionBuilder traj4 = drive.actionBuilder(new Pose2d(x1, y1, h1))
 
-                .strafeToLinearHeading(new Vector2d(x2_b, y2_b), h2_b )
+                .strafeToLinearHeading(new Vector2d(x2_b, -y2_b), -h2_b )
 
-                .strafeToLinearHeading(new Vector2d(x3, y3), h3 );
+                .strafeToLinearHeading(new Vector2d(x3, -y3), -h3 );
 
 
-        TrajectoryActionBuilder traj5 = drive.actionBuilder(new Pose2d(x3, y3, h3))
+        TrajectoryActionBuilder traj5 = drive.actionBuilder(new Pose2d(x3, -y3, -h3))
                 .strafeToLinearHeading(new Vector2d(x1, y1), h1 );
 
 
         TrajectoryActionBuilder traj6 = drive.actionBuilder(new Pose2d(x1, y1, h1))
-                .strafeToLinearHeading(new Vector2d(x1, y1+30), h1 );
+                .strafeToLinearHeading(new Vector2d(x1, y1-30), h1 );
 
         while(opModeInInit()) {
 

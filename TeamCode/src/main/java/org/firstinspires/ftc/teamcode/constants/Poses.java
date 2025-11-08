@@ -17,7 +17,7 @@ public class Poses {
 
     public static double x2 = 31, y2 = 32, h2 = Math.toRadians(135);
 
-    public static double x2_b = 75, y2_b = 25, h2_b = Math.toRadians(135);
+    public static double x2_b = 65, y2_b = 35, h2_b = Math.toRadians(135);
 
 
     public static double x3 = 45, y3 = 53, h3 = Math.toRadians(135);
