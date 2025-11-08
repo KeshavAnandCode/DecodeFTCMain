@@ -293,7 +293,7 @@ public class TeleopV1 extends LinearOpMode {
                 offset +=0.02;
             }
 
-            if (gamepad2.right_stick_x > 0.5){
+            if (gamepad2.right_stick_y < 0.7){
                 pos = shooter.getAngleByDist(
                         shooter.trackGoal(drive.localizer.getPose(), new Pose2d(-10, 0, 0),  offset)
                 );
@@ -320,7 +320,7 @@ public class TeleopV1 extends LinearOpMode {
 
                 autotrack = false;
 
-                shooter.moveTurret(shooter.getTurretPosition() - gamepad2.right_stick_x* 0.02);
+                shooter.moveTurret(shooter.getTurretPosition() + gamepad2.right_stick_x* 0.02);
 
             }
 

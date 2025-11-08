@@ -9,7 +9,11 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.libs.RR.MecanumDrive;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 public class Robot {
 
@@ -56,6 +60,13 @@ public class Robot {
     public AnalogInput analogInput;
 
     public AnalogInput analogInput2;
+
+    public AprilTagProcessor aprilTagProcessor;
+
+
+    public WebcamName webcam;
+
+
 
 
 
@@ -127,6 +138,12 @@ public class Robot {
         transferServo = hardwareMap.get(Servo.class, "transferServo");
 
         transfer.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
+
+
+        webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
+
 
 
     }

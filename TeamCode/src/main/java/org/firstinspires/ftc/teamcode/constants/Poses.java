@@ -12,5 +12,8 @@ public class Poses {
 
     public static double relativeGoalHeight = goalHeight - turretHeight;
 
+    public static double x1 = 50, y1 = 0, h1 = 0;
+
+
 
 }
