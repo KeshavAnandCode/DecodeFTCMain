@@ -40,7 +40,7 @@ import org.firstinspires.ftc.teamcode.utils.Robot;
 
 
 @Config
-@Autonomous
+@Autonomous (preselectTeleOp = "TeleopV1")
 public class Blue extends LinearOpMode {
 
     Robot robot;

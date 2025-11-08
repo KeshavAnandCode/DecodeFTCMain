@@ -322,7 +322,7 @@ public class TeleopV1 extends LinearOpMode {
 
                 autotrack = false;
 
-                shooter.moveTurret(shooter.getTurretPosition() + gamepad2.right_stick_x* 0.02);
+                shooter.moveTurret(0.3+offset);
 
             }
 
@@ -362,7 +362,6 @@ public class TeleopV1 extends LinearOpMode {
             if (scoreAll) {
                 double time = getRuntime() - g2LeftBumperStamp;
 
-                shooter.trackGoal(drive.localizer.getPose(), new Pose2d(-10, 0, 0), offset);
 
                 shooter.setManualPower(1);
 
