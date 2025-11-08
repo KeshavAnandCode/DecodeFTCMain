@@ -90,6 +90,7 @@ public class Spindexer implements Subsystem{
     }
 
     public void checkForBalls() {
+
         if (p0.getState()){
             ball0 = true;
             green0 = p1.getState();
@@ -141,25 +142,34 @@ public class Spindexer implements Subsystem{
         position = spindexer_outtakeBall1;
     }
 
-    public void outtakeGreen() {
-        if (green0) {
-            outtake1();
-        } else if (green1){
-            outtake2();
-        } else if (green2) {
+
+    public int outtakeGreen(int secLast, int Last) {
+        if (green2 && (secLast!=3) && (Last!=3)) {
             outtake3();
+            return 3;
+        } else if (green1 && (secLast!=2) && (Last!=2)){
+            outtake2();
+            return 2;
+        } else if (green0 && (secLast!=1) && (Last!=1)) {
+            outtake1();
+            return 1;
+        } else {
+
+            if (secLast!=1 && Last!= 1){
+                outtake1();
+                return 1;
+            } else if (secLast!=2 && Last!=2){
+                outtake2();
+                return 2;
+            } else {
+                outtake3();
+                return 3;
+            }
+
         }
     }
 
-    public void outtakePurpleFs() {
-        if (!green0 && ball0) {
-            outtake1();
-        } else if (!green1 && ball1){
-            outtake2();
-        } else if (!green2 && ball2) {
-            outtake3();
-        }
-    }
+
 
     public void outtakeGreenFs() {
         if (green0 && ball0) {
@@ -171,13 +181,46 @@ public class Spindexer implements Subsystem{
         }
     }
 
-    public void outtakePurple() {
-        if (!green0) {
-            outtake1();
-        } else if (!green1){
-            outtake2();
-        } else if (!green2) {
+    public int greens() {
+        int num = 0;
+
+        if (green0){num++;}
+
+        if (green1){num++;}
+
+
+        if (green2){num++;}
+
+        return num;
+
+
+    }
+
+
+    public int outtakePurple(int secLast, int Last) {
+        if (!green2 && (secLast!=3) && (Last!=3)) {
             outtake3();
+            return 3;
+        } else if (!green1 && (secLast!=2) && (Last!=2)){
+            outtake2();
+            return 2;
+        } else if (!green0 && (secLast!=1) && (Last!=1)) {
+            outtake1();
+            return 1;
+        } else {
+
+            if (secLast!=1 && Last!= 1){
+                outtake1();
+                return 1;
+            } else if (secLast!=2 && Last!=2){
+                outtake2();
+                return 2;
+            } else {
+                outtake3();
+                return 3;
+            }
+
+
         }
     }
 
@@ -198,7 +241,7 @@ public class Spindexer implements Subsystem{
             colorSensorTelemetry();
         }
 
-        checkForBalls();
+
 
     }
 }

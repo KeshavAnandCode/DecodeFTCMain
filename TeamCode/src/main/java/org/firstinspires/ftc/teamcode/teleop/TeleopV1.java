@@ -49,6 +49,10 @@ public class TeleopV1 extends LinearOpMode {
 
     public static double pos = 0.54;
 
+    public boolean all = false;
+
+    public int ticker = 0;
+
     ToggleButtonReader g1RightBumper;
 
     ToggleButtonReader g2Circle;
@@ -60,6 +64,8 @@ public class TeleopV1 extends LinearOpMode {
 
     ToggleButtonReader g2RightBumper;
 
+    ToggleButtonReader g1LeftBumper;
+
     ToggleButtonReader g2LeftBumper;
 
     ToggleButtonReader g2DpadUp;
@@ -69,11 +75,18 @@ public class TeleopV1 extends LinearOpMode {
     ToggleButtonReader g2DpadRight;
 
     ToggleButtonReader g2DpadLeft;
+
+    public boolean leftBumper = false;
     public double g1RightBumperStamp = 0.0;
+
+    public double g1LeftBumperStamp = 0.0;
+
 
     public double g2LeftBumperStamp = 0.0;
 
     public static int spindexerPos = 0;
+
+    public boolean green = false;
 
     Shooter shooter;
 
@@ -83,9 +96,22 @@ public class TeleopV1 extends LinearOpMode {
 
     public boolean autotrack = true;
 
+    public int last = 0;
+    public int second = 0;
+
     public double offset = 0.0;
 
+    public static double rIn = 0.59;
+
+    public static double rOut = 0;
+
     public boolean notShooting = true;
+
+    public boolean circle = false;
+
+    public boolean square = false;
+
+    public boolean tri = false;
 
 
 
@@ -112,6 +138,10 @@ public class TeleopV1 extends LinearOpMode {
         );
 
         g2 = new GamepadEx(gamepad2);
+
+        g1LeftBumper = new ToggleButtonReader(
+                g1, GamepadKeys.Button.LEFT_BUMPER
+        );
 
         g2Circle  = new ToggleButtonReader(
                 g2, GamepadKeys.Button.B
@@ -176,6 +206,8 @@ public class TeleopV1 extends LinearOpMode {
 
         shooter.setShooterMode("MANUAL");
 
+        robot.rejecter.setPosition(rIn);
+
 
 
 
@@ -196,7 +228,29 @@ public class TeleopV1 extends LinearOpMode {
             TELE.addData("heading", drive.localizer.getPose().heading.toDouble());
 
 
+            TELE.addData("off", offset);
+
+
             robot.hood.setPosition(pos);
+
+            g1LeftBumper.readValue();
+
+            if (g1LeftBumper.wasJustPressed()){
+                g2LeftBumperStamp = getRuntime();
+
+                leftBumper = true;
+            }
+
+            if (leftBumper){
+                double time = getRuntime() - g2LeftBumperStamp;
+
+                if (time < 1.0){
+                    robot.rejecter.setPosition(rOut);
+                } else {
+                    robot.rejecter.setPosition(rIn);
+                }
+
+            }
 
 
             intake();
@@ -214,6 +268,10 @@ public class TeleopV1 extends LinearOpMode {
             g2DpadDown.readValue();
 
             g2DpadUp.readValue();
+
+            if (!scoreAll){
+                spindexer.checkForBalls();
+            }
 
             if(g2DpadUp.wasJustPressed()){
                 pos -=0.02;
@@ -235,7 +293,7 @@ public class TeleopV1 extends LinearOpMode {
                 offset +=0.02;
             }
 
-            if (gamepad2.right_trigger > 0.5){
+            if (gamepad2.right_stick_x > 0.5){
                 pos = shooter.getAngleByDist(
                         shooter.trackGoal(drive.localizer.getPose(), new Pose2d(-10, 0, 0),  offset)
                 );
@@ -306,35 +364,422 @@ public class TeleopV1 extends LinearOpMode {
 
                 shooter.setManualPower(1);
 
+                TELE.addData("greenImportant", green);
+
+                TELE.addData("last", last);
+                TELE.addData("2ndLast", second);
+
+                int numGreen = spindexer.greens();
+
+                if (square) {
 
 
-                if (time < 0.3) {
-                    transfer.transferOut();
-                    transfer.setTransferPower(1);
-                } else if (time < 1.5){
-                    spindexer.outtake3();
-                } else  if (time < 2.0){
-                    transfer.transferIn();
-                } else if (time < 3){
-                    transfer.transferOut();
-                    spindexer.outtake2();
-                } else  if (time < 3.5){
-                    transfer.transferIn();
-                } else if (time < 4.5){
-                    transfer.transferOut();
-                    spindexer.outtake1();
-                }  else  if (time < 5){
-                    transfer.transferIn();
-                } else {
+                    if (time < 0.3) {
 
-                    scoreAll = false;
-                    transfer.transferOut();
+                        ticker = 0;
 
-                    shooter.setManualPower(0);
+                        last = 0;
+                        second = 0;
+
+
+                        transfer.transferOut();
+                        transfer.setTransferPower(1);
+                    } else if (time < 2) {
+
+                        if (ticker == 0) {
+
+                            if (numGreen == 2) {
+                                last = spindexer.outtakePurple(second, last);
+                                second = last;
+                            } else {
+                                last = spindexer.outtakeGreen(second, last);
+                                second = last;
+
+                            }
+                        }
+
+                        second = last;
+
+                        ticker++;
+
+
+                    } else if (time < 2.5) {
+
+                        ticker = 0;
+
+                        second = last;
+
+
+                        transfer.transferIn();
+                    } else if (time < 4) {
+                        transfer.transferOut();
+
+                        if (ticker == 0) {
+
+                            if (numGreen == 2) {
+                                last = spindexer.outtakeGreen(second, last);
+                            } else {
+                                last = spindexer.outtakePurple(second, last);
+
+                            }
+                        }
+
+                        ticker++;
+                    } else if (time < 4.5) {
+
+                        ticker = 0;
+
+
+                        transfer.transferIn();
+                    } else if (time < 6) {
+
+
+                        transfer.transferOut();
+
+                        if (ticker == 0) {
+
+                            if (numGreen == 2) {
+                                last = spindexer.outtakeGreen(second, last);
+                            } else {
+                                last = spindexer.outtakePurple(second, last);
+
+                            }
+                        }
+
+                        ticker++;
+
+                    } else if (time < 6.5) {
+                        transfer.transferIn();
+                    } else {
+
+                        ticker = 0;
+
+
+                        scoreAll = false;
+                        transfer.transferOut();
+
+                        shooter.setManualPower(0);
+
+                    }
+                } else if (tri) {
+
+
+                    if (time < 0.3) {
+
+                        ticker = 0;
+
+                        last = 0;
+                        second = 0;
+
+
+                        transfer.transferOut();
+                        transfer.setTransferPower(1);
+                    } else if (time < 2) {
+
+                        if (ticker == 0) {
+
+                            if (numGreen == 2) {
+                                last = spindexer.outtakeGreen(second, last);
+                                second = last;
+                            } else {
+                                last = spindexer.outtakePurple(second, last);
+                                second = last;
+
+                            }
+                        }
+
+                        second = last;
+
+                        ticker++;
+
+
+                    } else if (time < 2.5) {
+
+                        ticker = 0;
+
+                        second = last;
+
+
+                        transfer.transferIn();
+                    } else if (time < 4) {
+                        transfer.transferOut();
+
+                        if (ticker == 0) {
+
+                            if (numGreen == 2) {
+                                last = spindexer.outtakePurple(second, last);
+                            } else {
+                                last = spindexer.outtakeGreen(second, last);
+
+                            }
+                        }
+
+                        ticker++;
+                    } else if (time < 4.5) {
+
+                        ticker = 0;
+
+
+                        transfer.transferIn();
+                    } else if (time < 6) {
+
+
+                        transfer.transferOut();
+
+                        if (ticker == 0) {
+
+                            if (numGreen == 2) {
+                                last = spindexer.outtakeGreen(second, last);
+                            } else {
+                                last = spindexer.outtakePurple(second, last);
+
+                            }
+                        }
+
+                        ticker++;
+
+                    } else if (time < 6.5) {
+                        transfer.transferIn();
+                    } else {
+
+                        ticker = 0;
+
+
+                        scoreAll = false;
+                        transfer.transferOut();
+
+                        shooter.setManualPower(0);
+
+                    }
+                } else if (circle){
+
+
+                    if (time < 0.3) {
+
+                        ticker = 0;
+
+                        last = 0;
+                        second = 0;
+
+
+                        transfer.transferOut();
+                        transfer.setTransferPower(1);
+                    } else if (time < 2) {
+
+                        if (ticker == 0) {
+
+                            if (numGreen == 2) {
+                                last = spindexer.outtakeGreen(second, last);
+                                second = last;
+                            } else {
+                                last = spindexer.outtakePurple(second, last);
+                                second = last;
+
+                            }
+                        }
+
+                        second = last;
+
+                        ticker++;
+
+
+                    } else if (time < 2.5) {
+
+                        ticker = 0;
+
+                        second = last;
+
+
+                        transfer.transferIn();
+                    } else if (time < 4) {
+                        transfer.transferOut();
+
+                        if (ticker == 0) {
+
+                            if (numGreen == 2) {
+                                last = spindexer.outtakeGreen(second, last);
+                            } else {
+                                last = spindexer.outtakePurple(second, last);
+
+                            }
+                        }
+
+                        ticker++;
+                    } else if (time < 4.5) {
+
+                        ticker = 0;
+
+
+                        transfer.transferIn();
+                    } else if (time < 6) {
+
+
+                        transfer.transferOut();
+
+                        if (ticker == 0) {
+
+                            if (numGreen == 2) {
+                                last = spindexer.outtakePurple(second, last);
+                            } else {
+                                last = spindexer.outtakeGreen(second, last);
+
+                            }
+                        }
+
+                        ticker++;
+
+                    } else if (time < 6.5) {
+                        transfer.transferIn();
+                    } else {
+
+                        ticker = 0;
+
+
+                        scoreAll = false;
+                        transfer.transferOut();
+
+                        shooter.setManualPower(0);
+
+                    }
+                } else{
+
+
+                    if (time < 0.3) {
+
+                        ticker = 0;
+
+                        last = 0;
+                        second = 0;
+
+                        if (gamepad2.right_trigger > 0.5) {
+                            green = false;
+
+                            all = gamepad2.left_trigger > 0.5;
+
+                        } else if (gamepad2.left_trigger > 0.5) {
+                            green = true;
+
+                            all = false;
+                        } else {
+                            all = true;
+                        }
+
+
+                        transfer.transferOut();
+                        transfer.setTransferPower(1);
+                    } else if (time < 2) {
+
+                        if (ticker == 0) {
+
+                            if (all) {
+                                spindexer.outtake3();
+                                last = 3;
+                                second = 3;
+                            } else if (green) {
+                                last = spindexer.outtakeGreen(second, last);
+                                second = last;
+                            } else {
+                                last = spindexer.outtakePurple(second, last);
+                                second = last;
+
+                            }
+                        }
+
+                        second = last;
+
+                        ticker++;
+
+
+                    } else if (time < 2.5) {
+
+                        ticker = 0;
+
+                        second = last;
+
+                        if (gamepad2.right_trigger > 0.5) {
+                            green = false;
+
+                            all = gamepad2.left_trigger > 0.5;
+
+                        } else if (gamepad2.left_trigger > 0.5) {
+                            green = true;
+
+                            all = false;
+
+
+                        }
+
+                        transfer.transferIn();
+                    } else if (time < 4) {
+                        transfer.transferOut();
+
+                        if (ticker == 0) {
+
+                            if (all) {
+                                spindexer.outtake2();
+
+                                last = 2;
+                            } else if (green) {
+                                last = spindexer.outtakeGreen(second, last);
+                            } else {
+                                last = spindexer.outtakePurple(second, last);
+
+                            }
+                        }
+
+                        ticker++;
+                    } else if (time < 4.5) {
+
+                        ticker = 0;
+
+
+                        if (gamepad2.right_trigger > 0.5) {
+                            green = false;
+
+                            all = gamepad2.left_trigger > 0.5;
+
+                        } else if (gamepad2.left_trigger > 0.5) {
+                            green = true;
+
+                            all = false;
+                        }
+
+                        transfer.transferIn();
+                    } else if (time < 6) {
+
+
+                        transfer.transferOut();
+
+                        if (ticker == 0) {
+
+                            if (all) {
+                                spindexer.outtake1();
+                            } else if (green) {
+                                last = spindexer.outtakeGreen(second, last);
+                            } else {
+                                last = spindexer.outtakePurple(second, last);
+
+                            }
+                        }
+
+                        ticker++;
+
+                    } else if (time < 6.5) {
+                        transfer.transferIn();
+                    } else {
+
+                        ticker = 0;
+
+
+                        scoreAll = false;
+                        transfer.transferOut();
+
+                        shooter.setManualPower(0);
+
+                    }
+
+
                 }
-
-
-
             }
 
 
@@ -403,40 +848,33 @@ public class TeleopV1 extends LinearOpMode {
 
             spindexer.intakeShake(getRuntime());
 
-        } else
-
-        {
-
-
+        } else {
             if (g2Circle.wasJustPressed()){
-                spindexer.outtake3();
+                circle = true;
+                tri = false;
+                square = false;
 
 
-                
+
             }
 
             if (g2Triangle.wasJustPressed()){
-                spindexer.outtake2();
+                circle = false;
+                tri = true;
+                square = false;
             }
 
             if (g2Square.wasJustPressed()){
-                spindexer.outtake1();
+                circle = false;
+                tri = false;
+                square = true;
             }
 
-
-            if (g2Circle.wasJustReleased()){
-                transfer.setTransferPower(1);
-
+            if (gamepad2.x){
+                circle = false;
+                tri = false;
+                square = false;
             }
-
-            if (g2Triangle.wasJustReleased()){
-                transfer.setTransferPower(1);
-            }
-
-            if (g2Square.wasJustReleased()){
-                transfer.setTransferPower(1);
-            }
-
 
 
 
