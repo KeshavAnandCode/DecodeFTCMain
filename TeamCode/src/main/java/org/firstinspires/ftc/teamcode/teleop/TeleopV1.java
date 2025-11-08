@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.libs.RR.MecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Rejecter;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.Spindexer;
 import org.firstinspires.ftc.teamcode.subsystems.Transfer;
@@ -28,12 +29,15 @@ import org.firstinspires.ftc.teamcode.utils.Robot;
 
 public class TeleopV1 extends LinearOpMode {
 
+    public static double rpos = 0.5;
 
     Robot robot;
 
     Drivetrain drivetrain;
 
     Intake intake;
+
+    Rejecter rejecter;
 
     Spindexer spindexer;
 
@@ -201,7 +205,6 @@ public class TeleopV1 extends LinearOpMode {
 
         transfer = new Transfer(robot);
 
-
         spindexer = new Spindexer(robot, TELE);
 
         spindexer.setTelemetryOn(true);
@@ -264,6 +267,8 @@ public class TeleopV1 extends LinearOpMode {
 
 
             intake();
+
+            rejecter.rejecterPos(rpos);
 
             drivetrain.update();
 
