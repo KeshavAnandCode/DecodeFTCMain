@@ -179,7 +179,7 @@ public class Blue extends LinearOpMode {
 
             robot.hood.setPosition(hoodDefault);
 
-            shooter.setTurretPosition(0.28);
+            shooter.setTurretPosition(0.3);
 
             aprilTag.initTelemetry();
 
@@ -232,7 +232,7 @@ public class Blue extends LinearOpMode {
 
 
 
-                shooter.moveTurret(0.31);
+                shooter.moveTurret(0.3);
 
                 double time = getRuntime()-stamp;
 
@@ -317,7 +317,7 @@ public class Blue extends LinearOpMode {
 
 
 
-                shooter.moveTurret(0.31);
+                shooter.moveTurret(0.3);
 
                 double time = getRuntime()-stamp;
 
@@ -400,7 +400,7 @@ public class Blue extends LinearOpMode {
 
 
 
-                shooter.moveTurret(0.31);
+                shooter.moveTurret(0.3);
 
                 double time = getRuntime()-stamp;
 
