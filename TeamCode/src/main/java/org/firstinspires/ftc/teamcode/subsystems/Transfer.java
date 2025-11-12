@@ -25,21 +25,23 @@ public class Transfer implements Subsystem{
 
     }
 
-    public void setTransferPositionOn(){
-        this.servoPos  = transferServo_in;
+    public void setTransferPosition(double pos){
+        this.servoPos  = pos;
     }
 
-    public void setTransferPositionOff(){
-        this.servoPos = transferServo_out;
+    public void setTransferPower (double pow){
+        this.motorPow = pow;
     }
 
-    public void setTransferPowerOn (){
-        this.motorPow = -1;
+    public void transferOut(){
+        this.setTransferPosition(transferServo_out);
     }
 
-    public void setTransferPowerOff (){
-        this.motorPow = 0;
+    public void transferIn(){
+        this.setTransferPosition(transferServo_in);
     }
+
+
 
 
 
