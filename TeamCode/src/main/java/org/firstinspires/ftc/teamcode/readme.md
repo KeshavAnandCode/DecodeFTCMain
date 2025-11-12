@@ -5,7 +5,6 @@
 
 1. Open a terminal (or the terminal inside Android Studio).
 2. Navigate to the folder where you want to keep the project.
-3. Run:
 
    ```bash
    git clone https://github.com/KeshavAnandCode/DecodeFTCMain.git
@@ -111,7 +110,7 @@ Examples:
 
 ---
 
-## 6. Branching Rules
+
 
 **Do:**
 - Always branch from `master`.
