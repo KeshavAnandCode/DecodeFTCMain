@@ -41,16 +41,6 @@ public class Transfer implements Subsystem{
         this.motorPow = 0;
     }
 
-    public void transferOut(){
-        this.setTransferPosition(transferServo_out);
-    }
-
-    public void transferIn(){
-        this.setTransferPosition(transferServo_in);
-    }
-
-
-
 
 
     @Override

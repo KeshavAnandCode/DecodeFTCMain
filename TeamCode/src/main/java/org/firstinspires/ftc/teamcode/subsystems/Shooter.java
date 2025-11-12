@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.constants.ShooterVars.*;
+
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -20,8 +22,6 @@ import java.util.Objects;
 public class Shooter implements Subsystem {
     private final DcMotorEx fly1;
     private final DcMotorEx fly2;
-
-    private final DcMotorEx encoder;
     private final Servo hoodServo;
 
     private final Servo turret1;
@@ -50,9 +50,9 @@ public class Shooter implements Subsystem {
 
 
 
-    private String shooterMode = "AUTO";
+    private String shooterMode = "MANUAL";
 
-    private String turretMode = "AUTO";
+    private String turretMode = "MANUAL";
 
 
     public Shooter(Robot robot, MultipleTelemetry TELE) {
@@ -77,8 +77,6 @@ public class Shooter implements Subsystem {
         this.turret1 = robot.turr1;
 
         this.turret2 = robot.turr2;
-
-        this.encoder = robot.shooterEncoder;
 
 
 
@@ -172,7 +170,7 @@ public class Shooter implements Subsystem {
     public void setTurretMode(String mode){ turretMode = mode;}
 
 
-    public double trackGoal(Pose2d robotPose, Pose2d goalPose, double offset){
+    public void trackGoal(Pose2d robotPose, Pose2d goalPose, boolean shooterOn){
 
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -182,7 +180,7 @@ public class Shooter implements Subsystem {
         Pose2d deltaPose = new Pose2d(
                 goalPose.position.x - robotPose.position.x,
                 goalPose.position.y - robotPose.position.y,
-                goalPose.heading.toDouble() - (robotPose.heading.toDouble())
+                goalPose.heading.toDouble() - robotPose.heading.toDouble()
         );
 
         double distance = Math.sqrt(
@@ -191,64 +189,41 @@ public class Shooter implements Subsystem {
                 + Poses.relativeGoalHeight * Poses.relativeGoalHeight
         );
 
-        telemetry.addData("dst", distance);
-
         double shooterPow = getPowerByDist(distance);
 
         double hoodAngle = getAngleByDist(distance);
 
+        if (shooterOn){
 
-//        hoodServo.setPosition(hoodAngle);
+            fly1.setVelocity(shooterPow);
+            fly2.setPower(fly1.getPower());
 
-        moveTurret(getTurretPosByDeltaPose(deltaPose, offset));
+        } else {
+            fly1.setPower(0);
+            fly2.setPower(0);
+        }
 
-        return distance;
+        hoodServo.setPosition(hoodAngle);
 
-
-
-
-
-        //0.9974 * 355
-
+        moveTurret(getTurretPosByDeltaPose(deltaPose));
 
     }
 
-    public double getTurretPosByDeltaPose (Pose2d dPose, double offset){
+    public double getTurretPosByDeltaPose (Pose2d dPose){
 
         double deltaAngle = Math.toDegrees(dPose.heading.toDouble());
 
 
-        double aTanAngle = Math.toDegrees(Math.atan(dPose.position.y/dPose.position.x));
-
-        telemetry.addData("deltaAngle", deltaAngle);
-
-
-
-        if (deltaAngle > 90) {
-            deltaAngle -=360;
+        if (deltaAngle < -180) {
+            deltaAngle +=360;
         }
 
+        deltaAngle /= (turret_GearRatio*turret_Range);
 
-
-//        deltaAngle += aTanAngle;
-
-        deltaAngle /= (335);
-
-        telemetry.addData("dAngle", deltaAngle);
-
-        telemetry.addData("AtanAngle", aTanAngle);
-
-
-        return ((0.30-deltaAngle) + offset);
-
+        return (0.5+deltaAngle) ;
 
 
     }
-
-    //62, 0.44
-
-    //56.5, 0.5
-
 
     public double getPowerByDist(double dist){
 
@@ -258,18 +233,9 @@ public class Shooter implements Subsystem {
 
     public double getAngleByDist(double dist){
 
-
-        double newDist = dist - 56.5;
-
-        double pos = newDist*((0.44-0.5)/(62-56.5)) + 0.46;
-
-
-
-
-        return  pos;
+        //TODO: ADD LOGIC
+        return  dist;
     }
-
-
 
 
     public void setTelemetryOn(boolean state){telemetryOn = state;}
@@ -296,16 +262,9 @@ public class Shooter implements Subsystem {
             fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            fly1.setVelocity(velocity);
 
-            fly2.setPower(fly1.getPower());
-
-
-
-
-
-
-
+            fly1.setVelocity(velocity, AngleUnit.DEGREES);
+            fly2.setVelocity(velocity, AngleUnit.DEGREES);
         }
 
         else if (Objects.equals(shooterMode, "POS")){
@@ -320,7 +279,7 @@ public class Shooter implements Subsystem {
         }
 
         if (Objects.equals(turretMode, "MANUAL")){
-//            hoodServo.setPosition(hoodPos);
+            hoodServo.setPosition(hoodPos);
 
             moveTurret(turretPos);
 
