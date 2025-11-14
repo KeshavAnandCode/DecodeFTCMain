@@ -226,7 +226,7 @@ public class Blue extends LinearOpMode {
             double stamp = getRuntime();
 
 
-             stamp = getRuntime();
+            stamp = getRuntime();
 
             while (getRuntime()-stamp<4.5) {
 
