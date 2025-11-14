@@ -99,40 +99,40 @@ public class Red extends LinearOpMode {
 
 
 
-        TrajectoryActionBuilder shoot0 = drive.actionBuilder(new Pose2d(0, 0, 0))
+        TrajectoryActionBuilder traj1 = drive.actionBuilder(new Pose2d(0, 0, 0))
                 .strafeToLinearHeading(new Vector2d(x1, y1), h1 );
 
 
-        TrajectoryActionBuilder intake1 = drive.actionBuilder(new Pose2d(x1, y1, h1))
+        TrajectoryActionBuilder traj2 = drive.actionBuilder(new Pose2d(x1, y1, h1))
                 .turnTo(Math.toRadians(135))
                 .strafeToLinearHeading(new Vector2d(x2, y2), h2 );
 
 
-        TrajectoryActionBuilder shoot1 = drive.actionBuilder(new Pose2d(x2, y2, h2))
+        TrajectoryActionBuilder traj3 = drive.actionBuilder(new Pose2d(x2, y2, h2))
                 .strafeToLinearHeading(new Vector2d(x1, y1), h1 );
 
-        TrajectoryActionBuilder intake2 = drive.actionBuilder(new Pose2d(x1, y1, h1))
+        TrajectoryActionBuilder traj4 = drive.actionBuilder(new Pose2d(x1, y1, h1))
 
                 .strafeToLinearHeading(new Vector2d(x2_b, y2_b), h2_b )
 
                 .strafeToLinearHeading(new Vector2d(x3, y3), h3 );
 
 
-        TrajectoryActionBuilder shoot2 = drive.actionBuilder(new Pose2d(x3, y3, h3))
+        TrajectoryActionBuilder traj5 = drive.actionBuilder(new Pose2d(x3, y3, h3))
                 .strafeToLinearHeading(new Vector2d(x1, y1), h1 );
 
 
-        TrajectoryActionBuilder park = drive.actionBuilder(new Pose2d(x1, y1, h1))
+        TrajectoryActionBuilder traj6 = drive.actionBuilder(new Pose2d(x1, y1, h1))
                 .strafeToLinearHeading(new Vector2d(x1, y1+30), h1 );
 
         while(opModeInInit()) {
 
             if (gamepad2.dpadUpWasPressed()){
-                hoodDefault -= 0.01;
+                hoodDefault -= 0.02;
             }
 
             if (gamepad2.dpadDownWasPressed()){
-                hoodDefault += 0.01;
+                hoodDefault += 0.02;
             }
 
             robot.hood.setPosition(hoodDefault);
@@ -165,7 +165,7 @@ public class Red extends LinearOpMode {
 
             Actions.runBlocking(
                     new ParallelAction(
-                            shoot0.build()
+                            traj1.build()
                     )
             );
 
@@ -185,7 +185,7 @@ public class Red extends LinearOpMode {
 
 
 
-                shooter.moveTurret(turretDefault);
+                shooter.moveTurret(0.31);
 
                 double time = getRuntime()-stamp;
 
@@ -245,12 +245,12 @@ public class Red extends LinearOpMode {
             robot.intake.setPower(1);
 
             Actions.runBlocking(
-                    intake1.build()
+                    traj2.build()
             );
 
 
             Actions.runBlocking(
-                    shoot1.build()
+                    traj3.build()
             );
 
             shooter.setManualPower(1);
@@ -329,12 +329,12 @@ public class Red extends LinearOpMode {
             robot.intake.setPower(1);
 
             Actions.runBlocking(
-                    intake2.build()
+                    traj4.build()
             );
 
 
             Actions.runBlocking(
-                    shoot2.build()
+                    traj5.build()
             );
 
             shooter.setManualPower(1);
@@ -411,7 +411,7 @@ public class Red extends LinearOpMode {
             spindexer.outtake3();
 
             Actions.runBlocking(
-                    park.build()
+                    traj6.build()
             );
 
             drive.updatePoseEstimate();
