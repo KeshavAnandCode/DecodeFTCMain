@@ -19,5 +19,11 @@ public class ServoPositions {
 
     public static double hoodDefault = 0.35;
 
+    public static double turretDefault = 0.3;
+
+    public static double turretBlueOffset = -0.01;
+
+    public static double turretRedOffset = 0.01;
+
 
 }
