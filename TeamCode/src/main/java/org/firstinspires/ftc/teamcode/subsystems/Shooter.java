@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static java.lang.Runtime.getRuntime;
+
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -45,6 +47,7 @@ public class Shooter implements Subsystem {
     private double p = 0.0003, i = 0, d = 0.00001;
 
     private PIDController controller;
+    private double pow = 0.0;
 
 
 
@@ -100,8 +103,9 @@ public class Shooter implements Subsystem {
         telemetry.addData("hoodPos", gethoodPosition());
         telemetry.addData("turretPos", getTurretPosition());
         telemetry.addData("PID Coefficients", "P: %.6f, I: %.6f, D: %.6f", p, i, d);
-        telemetry.addData("Current Fly 1", fly1.getCurrent(CurrentUnit.AMPS));
-        telemetry.addData("Current Fly 2", fly2.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("Power Fly 1", fly1.getPower());
+        telemetry.addData("Pow Fly 2", fly2.getPower());
+        telemetry.addData("Pow", pow);
 
     }
 
@@ -118,7 +122,7 @@ public class Shooter implements Subsystem {
     public void setTurretPosition(double pos) {turretPos = pos;}
 
     public double getVelocity() {
-        return ((double) ((fly1.getVelocity(AngleUnit.DEGREES) + fly2.getVelocity(AngleUnit.DEGREES)) /2));
+        return ((double) ((fly1.getVelocity(AngleUnit.DEGREES))));
     }
 
     public void setVelocity(double vel){velocity = vel;}
@@ -292,13 +296,23 @@ public class Shooter implements Subsystem {
         }
 
         else if (Objects.equals(shooterMode, "VEL")){
-
             fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            fly1.setPower(pow);
+            fly2.setPower(pow);
 
-            fly1.setVelocity(velocity);
 
-            fly2.setPower(fly1.getPower());
+            if (velocity == 0.0){
+                fly1.setPower(0);
+                fly2.setPower(0);
+            } else if (-velocity < -Math.abs(fly1.getVelocity())){
+                while (-velocity < -Math.abs(fly1.getVelocity())){
+                    pow += 0.001;
+                    fly1.setPower(pow);
+                    fly2.setPower(pow);
+                }
+            }
+
 
 
 

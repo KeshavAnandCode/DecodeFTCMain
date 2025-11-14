@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import static org.firstinspires.ftc.teamcode.constants.Poses.teleStart;
-import static org.firstinspires.ftc.teamcode.constants.ServoPositions.hoodDefault;
+import static org.firstinspires.ftc.teamcode.constants.Poses.*;
+import static org.firstinspires.ftc.teamcode.constants.ServoPositions.*;
+
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -215,7 +216,6 @@ public class TeleopV1 extends LinearOpMode {
 
 
 
-
         waitForStart();
 
         if (isStopRequested()) return;
@@ -233,6 +233,7 @@ public class TeleopV1 extends LinearOpMode {
 
 
             TELE.addData("off", offset);
+            robot.transferServo.setPosition(transferServoPos);
 
 
             robot.hood.setPosition(pos);

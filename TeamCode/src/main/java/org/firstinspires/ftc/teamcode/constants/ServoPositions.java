@@ -16,8 +16,12 @@ public class ServoPositions {
     public static double transferServo_out = 0.13;
 
     public static double transferServo_in = 0.4;
+    public static double transferServoPos = 0.5;
 
     public static double hoodDefault = 0.35;
+
+    public static double turret_red = 0.33;
+    public static double turret_blue = 0.3;
 
 
 }

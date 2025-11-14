@@ -170,16 +170,16 @@ public class Blue extends LinearOpMode {
         while(opModeInInit()) {
 
             if (gamepad2.dpadUpWasPressed()){
-                hoodDefault -= 0.02;
+                hoodDefault -= 0.01;
             }
 
             if (gamepad2.dpadDownWasPressed()){
-                hoodDefault += 0.02;
+                hoodDefault += 0.01;
             }
 
             robot.hood.setPosition(hoodDefault);
 
-            shooter.setTurretPosition(0.3);
+            shooter.setTurretPosition(turret_blue);
 
             aprilTag.initTelemetry();
 
