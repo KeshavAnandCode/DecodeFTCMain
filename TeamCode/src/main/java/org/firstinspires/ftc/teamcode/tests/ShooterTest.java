@@ -21,11 +21,12 @@ public class ShooterTest extends LinearOpMode {
 
     public static double pow = 0.0;
     public static double vel = 0.0;
-
+    public static double mcpr = 28; // CPR of the motor
+    public static double ecpr = 1024.0; // CPR of the encoder
     public static int pos = 0;
     public static double posPower = 0.0;
 
-    public static double p = 0.000003, i = 0, d = 0.000001;
+    public static double p = 0.001, i = 0, d = 0;
 
 
     public static String flyMode = "MANUAL";

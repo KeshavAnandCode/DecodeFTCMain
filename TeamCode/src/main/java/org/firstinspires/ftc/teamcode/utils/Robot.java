@@ -104,7 +104,11 @@ public class Robot {
 
         shooter2 = hardwareMap.get(DcMotorEx.class, "shooter2");
 
-        shooter1.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooter2.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
+
 
         hood = hardwareMap.get(Servo.class, "hood");
 

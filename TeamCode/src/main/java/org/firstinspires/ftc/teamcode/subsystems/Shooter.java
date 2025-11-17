@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static java.lang.Runtime.getRuntime;
+import static org.firstinspires.ftc.teamcode.tests.ShooterTest.*;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -8,14 +8,11 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.constants.Poses;
 import org.firstinspires.ftc.teamcode.utils.Robot;
-import org.firstinspires.ftc.teamcode.subsystems.Subsystem;
 
 import java.util.Objects;
 
@@ -96,15 +93,16 @@ public class Shooter implements Subsystem {
 
         telemetry.addData("Mode", shooterMode);
         telemetry.addData("ManualPower", manualPower);
-        telemetry.addData("Position", getPosition());
+        telemetry.addData("ECPR Revolutions", getECPRPosition());
+        telemetry.addData("MCPR Revolutions", getMCPRPosition());
         telemetry.addData("TargetPosition", targetPosition);
-        telemetry.addData("Velocity", getVelocity());
+        telemetry.addData("Velocity", getVelocity(mcpr) * 60);
         telemetry.addData("TargetVelocity", velocity);
         telemetry.addData("hoodPos", gethoodPosition());
         telemetry.addData("turretPos", getTurretPosition());
         telemetry.addData("PID Coefficients", "P: %.6f, I: %.6f, D: %.6f", p, i, d);
         telemetry.addData("Power Fly 1", fly1.getPower());
-        telemetry.addData("Pow Fly 2", fly2.getPower());
+        telemetry.addData("Power Fly 2", fly2.getPower());
         telemetry.addData("Pow", pow);
 
     }
@@ -121,8 +119,9 @@ public class Shooter implements Subsystem {
 
     public void setTurretPosition(double pos) {turretPos = pos;}
 
-    public double getVelocity() {
-        return ((double) ((fly1.getVelocity(AngleUnit.DEGREES))));
+    public double getVelocity(double cpr) {
+        double rotations = 60*(fly1.getVelocity() / (2*cpr));
+        return rotations;
     }
 
     public void setVelocity(double vel){velocity = vel;}
@@ -167,8 +166,12 @@ public class Shooter implements Subsystem {
     public String getTurretMode(){return turretMode;}
 
 
-    public double getPosition(){
-        return ((double) ((fly1.getCurrentPosition() + fly2.getCurrentPosition()) /2));
+    public double getECPRPosition(){
+        return  (fly1.getCurrentPosition() * 360 / ecpr);
+    }
+
+    public double getMCPRPosition(){
+        return (fly1.getCurrentPosition() * 360) / mcpr;
     }
 
     public void setShooterMode(String mode){ shooterMode = mode;}
@@ -287,8 +290,8 @@ public class Shooter implements Subsystem {
     public void update() {
 
         if (Objects.equals(shooterMode, "MANUAL")){
-            fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            fly1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            fly2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
             fly1.setPower(manualPower);
@@ -296,42 +299,20 @@ public class Shooter implements Subsystem {
         }
 
         else if (Objects.equals(shooterMode, "VEL")){
-            fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            fly1.setPower(pow);
-            fly2.setPower(pow);
+            fly1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            fly2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-            if (velocity == 0.0){
-                fly1.setPower(0);
-                fly2.setPower(0);
-            } else if (-velocity < -Math.abs(fly1.getVelocity())){
-                while (-velocity < -Math.abs(fly1.getVelocity())){
-                    pow += 0.001;
-                    fly1.setPower(pow);
-                    fly2.setPower(pow);
-                }
-            }
-
-
-
-
-
-
-
-
-        }
-
-        else if (Objects.equals(shooterMode, "POS")){
-
-
-            double powPID = controller.calculate(getPosition(), targetPosition);
+            double powPID = controller.calculate(getVelocity(mcpr) * ecpr, velocity);
 
 
 
             fly1.setPower(powPID);
             fly2.setPower(powPID);
+
+
         }
+
+
 
         if (Objects.equals(turretMode, "MANUAL")){
 //            hoodServo.setPosition(hoodPos);
