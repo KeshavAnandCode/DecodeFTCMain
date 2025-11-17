@@ -120,8 +120,7 @@ public class Shooter implements Subsystem {
     public void setTurretPosition(double pos) {turretPos = pos;}
 
     public double getVelocity(double cpr) {
-        double rotations = 60*(fly1.getVelocity() / (2*cpr));
-        return rotations;
+        return 60*(fly1.getVelocity() / (2*cpr));
     }
 
     public void setVelocity(double vel){velocity = vel;}
@@ -167,11 +166,11 @@ public class Shooter implements Subsystem {
 
 
     public double getECPRPosition(){
-        return  (fly1.getCurrentPosition() * 360 / ecpr);
+        return  (fly1.getCurrentPosition() * 720 / ecpr);
     }
 
     public double getMCPRPosition(){
-        return (fly1.getCurrentPosition() * 360) / mcpr;
+        return (fly1.getCurrentPosition() * 720) / mcpr;
     }
 
     public void setShooterMode(String mode){ shooterMode = mode;}
