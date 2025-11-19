@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.tests.ShooterTest.*;
 
+import static java.lang.Runtime.getRuntime;
+
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
@@ -42,7 +45,7 @@ public class Shooter implements Subsystem {
 
     private double p = 0.0003, i = 0, d = 0.00001;
 
-    private PIDController controller;
+    private PIDFController controller;
     private double pow = 0.0;
 
     private String shooterMode = "AUTO";
@@ -62,9 +65,9 @@ public class Shooter implements Subsystem {
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        controller = new PIDController(p, i, d);
+        controller = new PIDFController(p, i, d, f);
 
-        controller.setPID(p, i, d);
+        controller.setPIDF(p, i, d, f);
 
         this.turret1 = robot.turr1;
 
@@ -83,11 +86,9 @@ public class Shooter implements Subsystem {
         telemetry.addData("ECPR Revolutions", getECPRPosition());
         telemetry.addData("MCPR Revolutions", getMCPRPosition());
         telemetry.addData("TargetPosition", targetPosition);
-        telemetry.addData("Velocity", getVelocity(mcpr) * 60);
         telemetry.addData("TargetVelocity", velocity);
         telemetry.addData("hoodPos", gethoodPosition());
         telemetry.addData("turretPos", getTurretPosition());
-        telemetry.addData("PID Coefficients", "P: %.6f, I: %.6f, D: %.6f", p, i, d);
         telemetry.addData("Power Fly 1", fly1.getPower());
         telemetry.addData("Power Fly 2", fly2.getPower());
         telemetry.addData("Pow", pow);
@@ -106,8 +107,8 @@ public class Shooter implements Subsystem {
 
     public void setTurretPosition(double pos) { turretPos = pos; }
 
-    public double getVelocity(double cpr) {
-        return 60 * (fly1.getVelocity() / (2 * cpr));
+    public double getVelocity(double initPos) {
+        return (getECPRPosition() - initPos);
     }
 
     public void setVelocity(double vel) { velocity = vel; }
@@ -122,11 +123,12 @@ public class Shooter implements Subsystem {
         controller.setTolerance(tolerance);
     }
 
-    public void setControllerCoefficients(double kp, double ki, double kd) {
+    public void setControllerCoefficients(double kp, double ki, double kd, double kf) {
         p = kp;
         i = ki;
         d = kd;
-        controller.setPID(p, i, d);
+        f = kf;
+        controller.setPIDF(p, i, d, f);
 
     }
 
@@ -143,11 +145,11 @@ public class Shooter implements Subsystem {
     public String getTurretMode() { return turretMode; }
 
     public double getECPRPosition() {
-        return (fly1.getCurrentPosition() * 720 / ecpr);
+        return fly1.getCurrentPosition() / (2 * ecpr);
     }
 
     public double getMCPRPosition() {
-        return (fly1.getCurrentPosition() * 720) / mcpr;
+        return fly1.getCurrentPosition() / (2 * mcpr);
     }
 
     public void setShooterMode(String mode) { shooterMode = mode; }
@@ -250,7 +252,7 @@ public class Shooter implements Subsystem {
             fly1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             fly2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            double powPID = controller.calculate(getVelocity(mcpr) * ecpr, velocity);
+            double powPID = controller.calculate(fly1.getVelocity(), velocity);
 
             fly1.setPower(powPID);
             fly2.setPower(powPID);

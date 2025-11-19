@@ -30,8 +30,6 @@ public class Robot {
 
     public DcMotorEx transfer;
 
-
-
     public DcMotorEx shooter1;
     public DcMotorEx shooter2;
     public Servo hood;
@@ -63,25 +61,11 @@ public class Robot {
 
     public AprilTagProcessor aprilTagProcessor;
 
-
     public WebcamName webcam;
 
     public DcMotorEx shooterEncoder;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public Robot (HardwareMap hardwareMap) {
+    public Robot(HardwareMap hardwareMap) {
 
         //Define components w/ hardware map
 
@@ -106,10 +90,6 @@ public class Robot {
 
         shooter2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
-
-
-
         hood = hardwareMap.get(Servo.class, "hood");
 
         turr1 = hardwareMap.get(Servo.class, "t1");
@@ -132,10 +112,7 @@ public class Robot {
 
         pin5 = hardwareMap.get(DigitalChannel.class, "pin5");
 
-
-
         analogInput = hardwareMap.get(AnalogInput.class, "analog");
-
 
         analogInput2 = hardwareMap.get(AnalogInput.class, "analog2");
 
@@ -147,12 +124,7 @@ public class Robot {
 
         aprilTagProcessor = AprilTagProcessor.easyCreateWithDefaults();
 
-
         webcam = hardwareMap.get(WebcamName.class, "Webcam 1");
-
-
-
-
 
     }
 }

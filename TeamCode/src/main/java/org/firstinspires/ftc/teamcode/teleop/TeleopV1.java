@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.teleop;
 import static org.firstinspires.ftc.teamcode.constants.Poses.*;
 import static org.firstinspires.ftc.teamcode.constants.ServoPositions.*;
 
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -23,12 +22,10 @@ import org.firstinspires.ftc.teamcode.subsystems.Spindexer;
 import org.firstinspires.ftc.teamcode.subsystems.Transfer;
 import org.firstinspires.ftc.teamcode.utils.Robot;
 
-
 @Config
 @TeleOp
 
 public class TeleopV1 extends LinearOpMode {
-
 
     Robot robot;
 
@@ -64,7 +61,6 @@ public class TeleopV1 extends LinearOpMode {
 
     ToggleButtonReader g2Square;
 
-
     ToggleButtonReader g2Triangle;
 
     ToggleButtonReader g2RightBumper;
@@ -86,7 +82,6 @@ public class TeleopV1 extends LinearOpMode {
 
     public double g1LeftBumperStamp = 0.0;
 
-
     public double g2LeftBumperStamp = 0.0;
 
     public static int spindexerPos = 0;
@@ -97,7 +92,7 @@ public class TeleopV1 extends LinearOpMode {
 
     public boolean scoreAll = false;
 
-    MecanumDrive drive ;
+    MecanumDrive drive;
 
     public boolean autotrack = false;
 
@@ -118,16 +113,10 @@ public class TeleopV1 extends LinearOpMode {
 
     public boolean tri = false;
 
-
-
     @Override
     public void runOpMode() throws InterruptedException {
 
-        drive  = new MecanumDrive(hardwareMap, teleStart);
-
-
-
-
+        drive = new MecanumDrive(hardwareMap, teleStart);
 
         robot = new Robot(hardwareMap);
 
@@ -138,7 +127,7 @@ public class TeleopV1 extends LinearOpMode {
 
         g1 = new GamepadEx(gamepad1);
 
-        g1RightBumper  = new ToggleButtonReader(
+        g1RightBumper = new ToggleButtonReader(
                 g1, GamepadKeys.Button.RIGHT_BUMPER
         );
 
@@ -148,47 +137,41 @@ public class TeleopV1 extends LinearOpMode {
                 g1, GamepadKeys.Button.LEFT_BUMPER
         );
 
-        g2Circle  = new ToggleButtonReader(
+        g2Circle = new ToggleButtonReader(
                 g2, GamepadKeys.Button.B
         );
 
-        g2Triangle  = new ToggleButtonReader(
+        g2Triangle = new ToggleButtonReader(
                 g2, GamepadKeys.Button.Y
         );
 
-        g2Square  = new ToggleButtonReader(
+        g2Square = new ToggleButtonReader(
                 g2, GamepadKeys.Button.X
         );
 
-        g2RightBumper  = new ToggleButtonReader(
+        g2RightBumper = new ToggleButtonReader(
                 g2, GamepadKeys.Button.RIGHT_BUMPER
         );
 
-
-        g2LeftBumper  = new ToggleButtonReader(
+        g2LeftBumper = new ToggleButtonReader(
                 g2, GamepadKeys.Button.LEFT_BUMPER
         );
 
-        g2DpadUp  = new ToggleButtonReader(
+        g2DpadUp = new ToggleButtonReader(
                 g2, GamepadKeys.Button.DPAD_UP
         );
 
-
-        g2DpadDown  = new ToggleButtonReader(
+        g2DpadDown = new ToggleButtonReader(
                 g2, GamepadKeys.Button.DPAD_DOWN
         );
 
-        g2DpadLeft  = new ToggleButtonReader(
+        g2DpadLeft = new ToggleButtonReader(
                 g2, GamepadKeys.Button.DPAD_LEFT
         );
 
-
-        g2DpadRight  = new ToggleButtonReader(
+        g2DpadRight = new ToggleButtonReader(
                 g2, GamepadKeys.Button.DPAD_RIGHT
         );
-
-
-
 
         drivetrain = new Drivetrain(robot, TELE, g1);
 
@@ -202,7 +185,6 @@ public class TeleopV1 extends LinearOpMode {
 
         transfer = new Transfer(robot);
 
-
         spindexer = new Spindexer(robot, TELE);
 
         spindexer.setTelemetryOn(true);
@@ -213,17 +195,13 @@ public class TeleopV1 extends LinearOpMode {
 
         robot.rejecter.setPosition(rIn);
 
-
-
-
         waitForStart();
 
         if (isStopRequested()) return;
 
-        drive  = new MecanumDrive(hardwareMap, teleStart);
+        drive = new MecanumDrive(hardwareMap, teleStart);
 
-
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
 
             drive.updatePoseEstimate();
 
@@ -231,38 +209,31 @@ public class TeleopV1 extends LinearOpMode {
 
             TELE.addData("heading", drive.localizer.getPose().heading.toDouble());
 
-
             TELE.addData("off", offset);
             robot.transferServo.setPosition(transferServoPos);
-
 
             robot.hood.setPosition(pos);
 
             g1LeftBumper.readValue();
 
-            if (g1LeftBumper.wasJustPressed()){
+            if (g1LeftBumper.wasJustPressed()) {
                 g2LeftBumperStamp = getRuntime();
-
-
 
                 spindexer.intakeShake(getRuntime());
 
                 leftBumper = true;
             }
 
-            if (leftBumper){
+            if (leftBumper) {
                 double time = getRuntime() - g2LeftBumperStamp;
 
-                if (time < 1.0){
+                if (time < 1.0) {
                     robot.rejecter.setPosition(rOut);
                 } else {
                     robot.rejecter.setPosition(rIn);
                 }
 
             }
-
-
-
 
             intake();
 
@@ -280,45 +251,33 @@ public class TeleopV1 extends LinearOpMode {
 
             g2DpadUp.readValue();
 
-            if (!scoreAll){
+            if (!scoreAll) {
                 spindexer.checkForBalls();
             }
 
-            if(g2DpadUp.wasJustPressed()){
-                pos -=0.02;
+            if (g2DpadUp.wasJustPressed()) {
+                pos -= 0.02;
             }
 
-            if(g2DpadDown.wasJustPressed()){
-                pos +=0.02;
+            if (g2DpadDown.wasJustPressed()) {
+                pos += 0.02;
             }
 
             g2DpadLeft.readValue();
 
             g2DpadRight.readValue();
 
-            if(g2DpadLeft.wasJustPressed()){
-                offset -=0.02;
+            if (g2DpadLeft.wasJustPressed()) {
+                offset -= 0.02;
             }
 
-            if(g2DpadRight.wasJustPressed()){
-                offset +=0.02;
+            if (g2DpadRight.wasJustPressed()) {
+                offset += 0.02;
             }
-
-
 
             TELE.addData("hood", pos);
 
-
-
-
-
-
-
-
             if (Math.abs(gamepad2.right_stick_x) < 0.1 && autotrack) {
-
-
-
 
                 shooter.trackGoal(drive.localizer.getPose(), new Pose2d(-10, 0, 0), offset);
 
@@ -326,17 +285,15 @@ public class TeleopV1 extends LinearOpMode {
 
                 autotrack = false;
 
-                shooter.moveTurret(0.3+offset);
+                shooter.moveTurret(0.3 + offset);
 
             }
 
-            if (gamepad2.right_stick_button){
+            if (gamepad2.right_stick_button) {
                 autotrack = true;
             }
 
-
-
-            if (g2RightBumper.wasJustPressed()){
+            if (g2RightBumper.wasJustPressed()) {
                 transfer.setTransferPower(1);
                 transfer.transferIn();
                 shooter.setManualPower(1);
@@ -345,19 +302,19 @@ public class TeleopV1 extends LinearOpMode {
 
             }
 
-            if (g2RightBumper.wasJustReleased()){
+            if (g2RightBumper.wasJustReleased()) {
                 transfer.setTransferPower(1);
                 transfer.transferOut();
             }
 
-            if (gamepad2.left_stick_y>0.5){
+            if (gamepad2.left_stick_y > 0.5) {
 
                 shooter.setManualPower(0);
-            } else if (gamepad2.left_stick_y<-0.5){
+            } else if (gamepad2.left_stick_y < -0.5) {
                 shooter.setManualPower(1);
             }
 
-            if (g2LeftBumper.wasJustPressed()){
+            if (g2LeftBumper.wasJustPressed()) {
                 g2LeftBumperStamp = getRuntime();
                 notShooting = false;
                 scoreAll = true;
@@ -365,7 +322,6 @@ public class TeleopV1 extends LinearOpMode {
 
             if (scoreAll) {
                 double time = getRuntime() - g2LeftBumperStamp;
-
 
                 shooter.setManualPower(1);
 
@@ -378,14 +334,12 @@ public class TeleopV1 extends LinearOpMode {
 
                 if (square) {
 
-
                     if (time < 0.3) {
 
                         ticker = 0;
 
                         last = 0;
                         second = 0;
-
 
                         transfer.transferOut();
                         transfer.setTransferPower(1);
@@ -407,13 +361,11 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker++;
 
-
                     } else if (time < 2.5) {
 
                         ticker = 0;
 
                         second = last;
-
 
                         transfer.transferIn();
                     } else if (time < 4) {
@@ -434,10 +386,8 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker = 0;
 
-
                         transfer.transferIn();
                     } else if (time < 6) {
-
 
                         transfer.transferOut();
 
@@ -458,7 +408,6 @@ public class TeleopV1 extends LinearOpMode {
                     } else {
 
                         ticker = 0;
-
 
                         scoreAll = false;
                         transfer.transferOut();
@@ -468,14 +417,12 @@ public class TeleopV1 extends LinearOpMode {
                     }
                 } else if (tri) {
 
-
                     if (time < 0.3) {
 
                         ticker = 0;
 
                         last = 0;
                         second = 0;
-
 
                         transfer.transferOut();
                         transfer.setTransferPower(1);
@@ -497,13 +444,11 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker++;
 
-
                     } else if (time < 2.5) {
 
                         ticker = 0;
 
                         second = last;
-
 
                         transfer.transferIn();
                     } else if (time < 4) {
@@ -524,10 +469,8 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker = 0;
 
-
                         transfer.transferIn();
                     } else if (time < 6) {
-
 
                         transfer.transferOut();
 
@@ -549,15 +492,13 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker = 0;
 
-
                         scoreAll = false;
                         transfer.transferOut();
 
                         shooter.setManualPower(0);
 
                     }
-                } else if (circle){
-
+                } else if (circle) {
 
                     if (time < 0.3) {
 
@@ -565,7 +506,6 @@ public class TeleopV1 extends LinearOpMode {
 
                         last = 0;
                         second = 0;
-
 
                         transfer.transferOut();
                         transfer.setTransferPower(1);
@@ -587,13 +527,11 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker++;
 
-
                     } else if (time < 2.5) {
 
                         ticker = 0;
 
                         second = last;
-
 
                         transfer.transferIn();
                     } else if (time < 4) {
@@ -614,10 +552,8 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker = 0;
 
-
                         transfer.transferIn();
                     } else if (time < 6) {
-
 
                         transfer.transferOut();
 
@@ -639,15 +575,13 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker = 0;
 
-
                         scoreAll = false;
                         transfer.transferOut();
 
                         shooter.setManualPower(0);
 
                     }
-                } else{
-
+                } else {
 
                     if (time < 0.3) {
 
@@ -668,7 +602,6 @@ public class TeleopV1 extends LinearOpMode {
                         } else {
                             all = true;
                         }
-
 
                         transfer.transferOut();
                         transfer.setTransferPower(1);
@@ -694,7 +627,6 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker++;
 
-
                     } else if (time < 2.5) {
 
                         ticker = 0;
@@ -710,7 +642,6 @@ public class TeleopV1 extends LinearOpMode {
                             green = true;
 
                             all = false;
-
 
                         }
 
@@ -737,7 +668,6 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker = 0;
 
-
                         if (gamepad2.right_trigger > 0.5) {
                             green = false;
 
@@ -751,7 +681,6 @@ public class TeleopV1 extends LinearOpMode {
 
                         transfer.transferIn();
                     } else if (time < 6) {
-
 
                         transfer.transferOut();
 
@@ -775,7 +704,6 @@ public class TeleopV1 extends LinearOpMode {
 
                         ticker = 0;
 
-
                         scoreAll = false;
                         transfer.transferOut();
 
@@ -783,33 +711,16 @@ public class TeleopV1 extends LinearOpMode {
 
                     }
 
-
                 }
             }
 
-
             shooter.update();
-
-
-
-
-
-
-
-
-
-
-
 
         }
 
-
-
-
     }
 
-    public void intake(){
-
+    public void intake() {
 
         g1RightBumper.readValue();
 
@@ -819,84 +730,63 @@ public class TeleopV1 extends LinearOpMode {
 
         g2Triangle.readValue();
 
-        if (g1RightBumper.wasJustPressed()){
+        if (g1RightBumper.wasJustPressed()) {
 
             notShooting = true;
 
-
-
-
-            if (getRuntime() - g1RightBumperStamp < 0.3){
+            if (getRuntime() - g1RightBumperStamp < 0.3) {
                 intake.reverse();
             } else {
                 intake.toggle();
             }
 
-            if (intake.getIntakeState()==1){
+            if (intake.getIntakeState() == 1) {
                 shooter.setManualPower(0);
             }
-
-
-
 
             spindexer.intake();
 
             transfer.transferOut();
 
-
             g1RightBumperStamp = getRuntime();
 
         }
 
-
-        if (intake.getIntakeState()==1 && notShooting) {
+        if (intake.getIntakeState() == 1 && notShooting) {
 
             spindexer.intakeShake(getRuntime());
 
         } else {
-            if (g2Circle.wasJustPressed()){
+            if (g2Circle.wasJustPressed()) {
                 circle = true;
                 tri = false;
                 square = false;
 
-
-
             }
 
-            if (g2Triangle.wasJustPressed()){
+            if (g2Triangle.wasJustPressed()) {
                 circle = false;
                 tri = true;
                 square = false;
             }
 
-            if (g2Square.wasJustPressed()){
+            if (g2Square.wasJustPressed()) {
                 circle = false;
                 tri = false;
                 square = true;
             }
 
-            if (gamepad2.x){
+            if (gamepad2.x) {
                 circle = false;
                 tri = false;
                 square = false;
             }
 
-
-
-
         }
-
 
         intake.update();
 
-
-
-
         spindexer.update();
-
-
-
-
 
     }
 }

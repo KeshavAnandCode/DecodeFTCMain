@@ -1,8 +1,14 @@
 package org.firstinspires.ftc.teamcode.tests;
 
+import android.app.Notification;
+
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,12 +26,14 @@ public class ShooterTest extends LinearOpMode {
 
     public static double pow = 0.0;
     public static double vel = 0.0;
-    public static double mcpr = 28; // CPR of the motor
+    public static double mcpr = 28.0; // CPR of the motor
     public static double ecpr = 1024.0; // CPR of the encoder
     public static int pos = 0;
     public static double posPower = 0.0;
 
-    public static double p = 0.001, i = 0, d = 0;
+    public static double posi = 0.5;
+
+    public static double p = 0.001, i = 0, d = 0, f = 0;
 
     public static String flyMode = "MANUAL";
 
@@ -35,7 +43,17 @@ public class ShooterTest extends LinearOpMode {
 
     public static double servoPosition = 0.501;
 
+    public double stamp = 0.0;
+
+    public double initPos = 0.0;
+
+    public static double time = 1.0;
+
     MultipleTelemetry TELE;
+
+    public boolean wait(double time) {
+        return (getRuntime() - stamp) > time;
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -52,7 +70,7 @@ public class ShooterTest extends LinearOpMode {
 
         shooter.setShooterMode(flyMode);
 
-        shooter.setControllerCoefficients(p, i, d);
+        shooter.setControllerCoefficients(p, i, d, f);
 
         waitForStart();
 
@@ -60,7 +78,7 @@ public class ShooterTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            shooter.setControllerCoefficients(p, i, d);
+            shooter.setControllerCoefficients(p, i, d, f);
 
             shooter.setTurretMode(turrMode);
 
@@ -72,6 +90,8 @@ public class ShooterTest extends LinearOpMode {
 
             shooter.setTargetPosition(pos);
 
+            shooter.setTurretPosition(posi);
+
             shooter.setTolerance(posTolerance);
 
             shooter.setPosPower(posPower);
@@ -80,6 +100,11 @@ public class ShooterTest extends LinearOpMode {
 
             shooter.update();
 
+            if (wait(time)){
+                telemetry.addData("Velocity", shooter.getVelocity(initPos));
+                stamp = getRuntime();
+                initPos = shooter.getECPRPosition();
+            }
             TELE.update();
 
         }
