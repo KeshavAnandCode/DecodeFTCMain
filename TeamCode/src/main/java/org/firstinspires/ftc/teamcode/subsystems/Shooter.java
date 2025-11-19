@@ -27,7 +27,6 @@ public class Shooter implements Subsystem {
 
     private final Servo turret2;
 
-
     private final MultipleTelemetry telemetry;
 
     private boolean telemetryOn = false;
@@ -46,14 +45,9 @@ public class Shooter implements Subsystem {
     private PIDController controller;
     private double pow = 0.0;
 
-
-
-
-
     private String shooterMode = "AUTO";
 
     private String turretMode = "AUTO";
-
 
     public Shooter(Robot robot, MultipleTelemetry TELE) {
         this.fly1 = robot.shooter1;
@@ -68,9 +62,7 @@ public class Shooter implements Subsystem {
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
         controller = new PIDController(p, i, d);
-
 
         controller.setPID(p, i, d);
 
@@ -79,11 +71,6 @@ public class Shooter implements Subsystem {
         this.turret2 = robot.turr2;
 
         this.encoder = robot.shooterEncoder;
-
-
-
-
-
 
     }
 
@@ -111,34 +98,31 @@ public class Shooter implements Subsystem {
         return (hoodServo.getPosition());
     }
 
-    public void sethoodPosition(double pos) {hoodPos = pos;}
+    public void sethoodPosition(double pos) { hoodPos = pos; }
 
     public double getTurretPosition() {
-        return ((turret1.getPosition()+ (1-turret2.getPosition()))/2);
+        return ((turret1.getPosition() + (1 - turret2.getPosition())) / 2);
     }
 
-    public void setTurretPosition(double pos) {turretPos = pos;}
+    public void setTurretPosition(double pos) { turretPos = pos; }
 
     public double getVelocity(double cpr) {
-        return 60*(fly1.getVelocity() / (2*cpr));
+        return 60 * (fly1.getVelocity() / (2 * cpr));
     }
 
-    public void setVelocity(double vel){velocity = vel;}
+    public void setVelocity(double vel) { velocity = vel; }
 
+    public void setPosPower(double power) { posPower = power; }
 
-
-    public void setPosPower(double power){posPower = power;}
-
-
-    public void setTargetPosition(int pos){
+    public void setTargetPosition(int pos) {
         targetPosition = pos;
     }
 
-    public void setTolerance(int tolerance){
+    public void setTolerance(int tolerance) {
         controller.setTolerance(tolerance);
     }
 
-    public void setControllerCoefficients(double kp, double ki, double kd){
+    public void setControllerCoefficients(double kp, double ki, double kd) {
         p = kp;
         i = ki;
         d = kd;
@@ -146,44 +130,34 @@ public class Shooter implements Subsystem {
 
     }
 
-    public PIDCoefficients  getControllerCoefficients(){
+    public PIDCoefficients getControllerCoefficients() {
 
         return new PIDCoefficients(p, i, d);
 
     }
 
+    public void setManualPower(double power) { manualPower = power; }
 
+    public String getShooterMode() { return shooterMode; }
 
+    public String getTurretMode() { return turretMode; }
 
-
-
-
-    public void setManualPower(double power){manualPower = power;}
-
-    public String getShooterMode(){return shooterMode;}
-
-    public String getTurretMode(){return turretMode;}
-
-
-    public double getECPRPosition(){
-        return  (fly1.getCurrentPosition() * 720 / ecpr);
+    public double getECPRPosition() {
+        return (fly1.getCurrentPosition() * 720 / ecpr);
     }
 
-    public double getMCPRPosition(){
+    public double getMCPRPosition() {
         return (fly1.getCurrentPosition() * 720) / mcpr;
     }
 
-    public void setShooterMode(String mode){ shooterMode = mode;}
+    public void setShooterMode(String mode) { shooterMode = mode; }
 
-    public void setTurretMode(String mode){ turretMode = mode;}
+    public void setTurretMode(String mode) { turretMode = mode; }
 
-
-    public double trackGoal(Pose2d robotPose, Pose2d goalPose, double offset){
+    public double trackGoal(Pose2d robotPose, Pose2d goalPose, double offset) {
 
         fly1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fly2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
 
         Pose2d deltaPose = new Pose2d(
                 goalPose.position.x - robotPose.position.x,
@@ -193,8 +167,8 @@ public class Shooter implements Subsystem {
 
         double distance = Math.sqrt(
                 deltaPose.position.x * deltaPose.position.x
-                        + deltaPose.position.y * deltaPose.position.y
-                        + Poses.relativeGoalHeight * Poses.relativeGoalHeight
+                + deltaPose.position.y * deltaPose.position.y
+                + Poses.relativeGoalHeight * Poses.relativeGoalHeight
         );
 
         telemetry.addData("dst", distance);
@@ -203,38 +177,27 @@ public class Shooter implements Subsystem {
 
         double hoodAngle = getAngleByDist(distance);
 
-
 //        hoodServo.setPosition(hoodAngle);
 
         moveTurret(getTurretPosByDeltaPose(deltaPose, offset));
 
         return distance;
 
-
-
-
-
         //0.9974 * 355
-
 
     }
 
-    public double getTurretPosByDeltaPose (Pose2d dPose, double offset){
+    public double getTurretPosByDeltaPose(Pose2d dPose, double offset) {
 
         double deltaAngle = Math.toDegrees(dPose.heading.toDouble());
 
-
-        double aTanAngle = Math.toDegrees(Math.atan(dPose.position.y/dPose.position.x));
+        double aTanAngle = Math.toDegrees(Math.atan(dPose.position.y / dPose.position.x));
 
         telemetry.addData("deltaAngle", deltaAngle);
 
-
-
         if (deltaAngle > 90) {
-            deltaAngle -=360;
+            deltaAngle -= 360;
         }
-
-
 
 //        deltaAngle += aTanAngle;
 
@@ -244,10 +207,7 @@ public class Shooter implements Subsystem {
 
         telemetry.addData("AtanAngle", aTanAngle);
 
-
-        return ((0.30-deltaAngle) + offset);
-
-
+        return ((0.30 - deltaAngle) + offset);
 
     }
 
@@ -255,77 +215,56 @@ public class Shooter implements Subsystem {
 
     //56.5, 0.5
 
-
-    public double getPowerByDist(double dist){
+    public double getPowerByDist(double dist) {
 
         //TODO: ADD LOGIC
-        return  dist;
+        return dist;
     }
 
-    public double getAngleByDist(double dist){
-
+    public double getAngleByDist(double dist) {
 
         double newDist = dist - 56.5;
 
-        double pos = newDist*((0.44-0.5)/(62-56.5)) + 0.46;
+        double pos = newDist * ((0.44 - 0.5) / (62 - 56.5)) + 0.46;
 
-
-
-
-        return  pos;
+        return pos;
     }
 
+    public void setTelemetryOn(boolean state) { telemetryOn = state; }
 
-
-
-    public void setTelemetryOn(boolean state){telemetryOn = state;}
-
-    public void moveTurret(double pos){
+    public void moveTurret(double pos) {
         turret1.setPosition(pos);
-        turret2.setPosition(1-pos);
+        turret2.setPosition(1 - pos);
     }
 
     @Override
     public void update() {
 
-        if (Objects.equals(shooterMode, "MANUAL")){
+        if (Objects.equals(shooterMode, "MANUAL")) {
             fly1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             fly2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
             fly1.setPower(manualPower);
             fly2.setPower(manualPower);
-        }
-
-        else if (Objects.equals(shooterMode, "VEL")){
+        } else if (Objects.equals(shooterMode, "VEL")) {
             fly1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             fly2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             double powPID = controller.calculate(getVelocity(mcpr) * ecpr, velocity);
 
-
-
             fly1.setPower(powPID);
             fly2.setPower(powPID);
 
-
         }
 
-
-
-        if (Objects.equals(turretMode, "MANUAL")){
+        if (Objects.equals(turretMode, "MANUAL")) {
 //            hoodServo.setPosition(hoodPos);
 
             moveTurret(turretPos);
 
-
         }
 
-
-
-        if (telemetryOn) {telemetryUpdate();}
-
-
+        if (telemetryOn) { telemetryUpdate(); }
 
     }
 }

@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import org.firstinspires.ftc.teamcode.utils.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
 
-
 @TeleOp
 @Config
 public class ShooterTest extends LinearOpMode {
@@ -28,7 +27,6 @@ public class ShooterTest extends LinearOpMode {
 
     public static double p = 0.001, i = 0, d = 0;
 
-
     public static String flyMode = "MANUAL";
 
     public static String turrMode = "MANUAL";
@@ -38,6 +36,7 @@ public class ShooterTest extends LinearOpMode {
     public static double servoPosition = 0.501;
 
     MultipleTelemetry TELE;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -53,16 +52,13 @@ public class ShooterTest extends LinearOpMode {
 
         shooter.setShooterMode(flyMode);
 
-
         shooter.setControllerCoefficients(p, i, d);
-
 
         waitForStart();
 
-        if(isStopRequested()) return;
+        if (isStopRequested()) return;
 
-
-        while(opModeIsActive()){
+        while (opModeIsActive()) {
 
             shooter.setControllerCoefficients(p, i, d);
 
@@ -80,18 +76,13 @@ public class ShooterTest extends LinearOpMode {
 
             shooter.setPosPower(posPower);
 
-            if (servoPosition!=0.501) {shooter.sethoodPosition(servoPosition);}
-
+            if (servoPosition != 0.501) { shooter.sethoodPosition(servoPosition); }
 
             shooter.update();
 
             TELE.update();
 
-
-
         }
-
-
 
     }
 }
