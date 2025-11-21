@@ -1,19 +1,10 @@
 package org.firstinspires.ftc.teamcode.tests;
 
-import android.app.Notification;
-
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.utils.Robot;
 import org.firstinspires.ftc.teamcode.subsystems.Shooter;
@@ -33,7 +24,7 @@ public class ShooterTest extends LinearOpMode {
 
     public static double posi = 0.5;
 
-    public static double p = 0.001, i = 0, d = 0, f = 0;
+    public static double p = 0.0003, i = 0, d = 0, f = 0;
 
     public static String flyMode = "MANUAL";
 
@@ -48,6 +39,8 @@ public class ShooterTest extends LinearOpMode {
     public double initPos = 0.0;
 
     public static double time = 1.0;
+
+    public double velo = 0.0;
 
     MultipleTelemetry TELE;
 
@@ -71,6 +64,8 @@ public class ShooterTest extends LinearOpMode {
         shooter.setShooterMode(flyMode);
 
         shooter.setControllerCoefficients(p, i, d, f);
+
+        initPos = shooter.getECPRPosition();
 
         waitForStart();
 
@@ -98,13 +93,22 @@ public class ShooterTest extends LinearOpMode {
 
             if (servoPosition != 0.501) { shooter.sethoodPosition(servoPosition); }
 
-            shooter.update();
-
             if (wait(time)){
-                telemetry.addData("Velocity", shooter.getVelocity(initPos));
+                velo = 60*((shooter.getECPRPosition() - initPos) / time);
                 stamp = getRuntime();
                 initPos = shooter.getECPRPosition();
             }
+
+            shooter.update();
+
+            TELE.addData("ECPR Revolutions", shooter.getECPRPosition());
+            TELE.addData("MCPR Revolutions", shooter.getMCPRPosition());
+            TELE.addData("Velocity", shooter.getVelocity(velo));
+            TELE.addData("hoodPos", shooter.gethoodPosition());
+            TELE.addData("turretPos", shooter.getTurretPosition());
+            TELE.addData("Power Fly 1", robot.shooter1.getPower());
+            TELE.addData("Power Fly 2", robot.shooter2.getPower());
+
             TELE.update();
 
         }

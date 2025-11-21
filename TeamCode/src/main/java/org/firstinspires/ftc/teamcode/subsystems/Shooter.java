@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import static org.firstinspires.ftc.teamcode.tests.ShooterTest.*;
 
-import static java.lang.Runtime.getRuntime;
 
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -41,6 +40,8 @@ public class Shooter implements Subsystem {
     private double velocity = 0.0;
     private double posPower = 0.0;
 
+    public double velo = 0.0;
+
     private int targetPosition = 0;
 
     private double p = 0.0003, i = 0, d = 0.00001;
@@ -77,24 +78,6 @@ public class Shooter implements Subsystem {
 
     }
 
-    public void telemetryUpdate() {
-
-        // Telemetry
-
-        telemetry.addData("Mode", shooterMode);
-        telemetry.addData("ManualPower", manualPower);
-        telemetry.addData("ECPR Revolutions", getECPRPosition());
-        telemetry.addData("MCPR Revolutions", getMCPRPosition());
-        telemetry.addData("TargetPosition", targetPosition);
-        telemetry.addData("TargetVelocity", velocity);
-        telemetry.addData("hoodPos", gethoodPosition());
-        telemetry.addData("turretPos", getTurretPosition());
-        telemetry.addData("Power Fly 1", fly1.getPower());
-        telemetry.addData("Power Fly 2", fly2.getPower());
-        telemetry.addData("Pow", pow);
-
-    }
-
     public double gethoodPosition() {
         return (hoodServo.getPosition());
     }
@@ -107,8 +90,10 @@ public class Shooter implements Subsystem {
 
     public void setTurretPosition(double pos) { turretPos = pos; }
 
-    public double getVelocity(double initPos) {
-        return (getECPRPosition() - initPos);
+
+
+    public double getVelocity(double vel) {
+        return vel;
     }
 
     public void setVelocity(double vel) { velocity = vel; }
@@ -252,7 +237,7 @@ public class Shooter implements Subsystem {
             fly1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             fly2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            double powPID = controller.calculate(fly1.getVelocity(), velocity);
+            double powPID = controller.calculate(-getVelocity(velo), velocity);
 
             fly1.setPower(powPID);
             fly2.setPower(powPID);
@@ -265,8 +250,6 @@ public class Shooter implements Subsystem {
             moveTurret(turretPos);
 
         }
-
-        if (telemetryOn) { telemetryUpdate(); }
 
     }
 }
